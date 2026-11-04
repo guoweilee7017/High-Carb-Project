@@ -1,0 +1,2757 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+  <title>High Carb Project · by chris | 亚洲体质高碳减脂智能配餐与周期规划系统</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --theme-primary: #10b981;
+      --theme-primary-hover: #059669;
+      --theme-secondary: #06b6d4;
+      --theme-accent: #3b82f6;
+      --theme-glow: rgba(16, 185, 129, 0.28);
+      --theme-card-border: rgba(16, 185, 129, 0.22);
+      --hero-bg: linear-gradient(135deg, #090e17 0%, #0c1626 45%, #05261f 100%);
+      --page-bg: radial-gradient(circle at 10% 8%, rgba(16, 185, 129, 0.08), transparent 36%),
+                 radial-gradient(circle at 90% 12%, rgba(6, 182, 212, 0.08), transparent 36%),
+                 #f8fafc;
+    }
+
+    body.theme-female {
+      --theme-primary: #f43f5e;
+      --theme-primary-hover: #e11d48;
+      --theme-secondary: #a855f7;
+      --theme-accent: #ec4899;
+      --theme-glow: rgba(244, 63, 94, 0.28);
+      --theme-card-border: rgba(244, 63, 94, 0.22);
+      --hero-bg: linear-gradient(135deg, #1b0e24 0%, #26112f 45%, #341028 100%);
+      --page-bg: radial-gradient(circle at 10% 8%, rgba(244, 63, 94, 0.09), transparent 38%),
+                 radial-gradient(circle at 90% 12%, rgba(168, 85, 247, 0.09), transparent 38%),
+                 #fdf8fa;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      background: var(--page-bg);
+      color: #0f172a;
+      -webkit-tap-highlight-color: transparent;
+      transition: background 0.4s ease;
+      overflow-x: hidden;
+    }
+
+    /* Keyframe Animations for Silky Smooth Experience */
+    @keyframes floatOrb {
+      0%, 100% { transform: scale(1) translate(0, 0); opacity: 0.35; }
+      50% { transform: scale(1.12) translate(10px, -12px); opacity: 0.6; }
+    }
+    @keyframes panelSlideIn {
+      from { opacity: 0; transform: translateY(18px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    @keyframes modalFadeIn {
+      from { opacity: 0; transform: scale(0.95) translateY(12px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    @keyframes pulseSoft {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.04); opacity: 0.85; }
+    }
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    @keyframes shimmerBar {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(200%); }
+    }
+
+    .aurora-orb {
+      animation: floatOrb 8s ease-in-out infinite;
+    }
+
+    .hero-aurora {
+      background: var(--hero-bg);
+      box-shadow: 0 24px 50px -15px var(--theme-glow);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .glass-card {
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(226, 232, 240, 0.9);
+      box-shadow: 0 10px 30px -12px rgba(15, 23, 42, 0.06);
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .glass-card:hover {
+      box-shadow: 0 18px 40px -12px rgba(15, 23, 42, 0.1);
+      border-color: var(--theme-card-border);
+    }
+
+    .brand-title-gradient {
+      background: linear-gradient(120deg, #ffffff 10%, #a7f3d0 60%, #67e8f9 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-size: 200% auto;
+      animation: gradientShift 6s ease infinite;
+    }
+
+    body.theme-female .brand-title-gradient {
+      background: linear-gradient(120deg, #ffffff 10%, #fecdd3 60%, #e9d5ff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-size: 200% auto;
+      animation: gradientShift 6s ease infinite;
+    }
+
+    .brand-text-gradient-dark {
+      background: linear-gradient(135deg, var(--theme-primary), var(--theme-secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .theme-btn-primary {
+      background: linear-gradient(135deg, var(--theme-primary), var(--theme-secondary));
+      color: #ffffff;
+      box-shadow: 0 8px 20px -4px var(--theme-glow);
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .theme-btn-primary:hover {
+      filter: brightness(1.08);
+      transform: translateY(-1.5px);
+      box-shadow: 0 12px 26px -4px var(--theme-glow);
+    }
+
+    .theme-btn-primary:active {
+      transform: translateY(0.5px);
+    }
+
+    /* Tab Switch Animation */
+    .tab-panel {
+      animation: panelSlideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    /* Tactile Interactive Buttons */
+    .tactile-btn {
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .tactile-btn:hover {
+      transform: translateY(-1px);
+    }
+    .tactile-btn:active {
+      transform: translateY(1px) scale(0.98);
+    }
+
+    /* Range Input Custom Styling */
+    input[type="range"] {
+      accent-color: var(--theme-primary);
+    }
+
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 9999px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+
+    /* Shimmer effect for progress bars */
+    .shimmer-track {
+      position: relative;
+      overflow: hidden;
+    }
+    .shimmer-track::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+      animation: shimmerBar 2.5s infinite;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col text-slate-900 pb-20 sm:pb-6 relative">
+
+  <!-- ========================================================= -->
+  <!-- HIGH CARB PROJECT WELCOME & PHILOSOPHY MODAL PANEL        -->
+  <!-- ========================================================= -->
+  <div id="projectIntroModal" class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-slate-950/75 backdrop-blur-md transition-all duration-300">
+    <div class="relative w-full max-w-3xl max-h-[92vh] overflow-y-auto custom-scrollbar bg-slate-900/95 border border-white/20 rounded-3xl p-5 sm:p-8 text-white shadow-2xl space-y-6" style="animation: modalFadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);">
+      <!-- Glowing decorative corner light -->
+      <div class="absolute -top-16 -right-16 w-56 h-56 rounded-full bg-emerald-500/25 blur-3xl pointer-events-none"></div>
+      <div class="absolute -bottom-16 -left-16 w-56 h-56 rounded-full bg-cyan-500/25 blur-3xl pointer-events-none"></div>
+
+      <!-- Header with Close Button -->
+      <div class="flex items-start justify-between gap-4 relative z-10 border-b border-white/10 pb-4">
+        <div>
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-emerald-300 text-xs font-bold tracking-wide uppercase">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+            <span>Welcome to High Carb Project</span>
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-black tracking-tight mt-2 flex items-baseline gap-2 flex-wrap">
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 via-teal-200 to-cyan-300">High Carb Project</span>
+            <span class="text-xs sm:text-sm font-semibold text-slate-400 tracking-wider">by chris</span>
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-300 mt-1">
+            打破传统节食与低碳断碳误区 · 专为亚洲人体质打造的高碳低脂科学燃脂系统
+          </p>
+        </div>
+        <button id="btnCloseIntroModalX" type="button" class="text-slate-400 hover:text-white p-2 rounded-xl bg-white/5 hover:bg-white/10 transition text-sm font-bold shrink-0">
+          ✕
+        </button>
+      </div>
+
+      <!-- Philosophy Highlights Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 relative z-10 text-xs text-slate-200">
+        <div class="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-2">
+          <div class="text-emerald-400 font-extrabold text-sm flex items-center gap-1.5">
+            <span>🔥</span> <span>1. 为什么高碳反而能极速减脂？</span>
+          </div>
+          <p class="text-slate-300 leading-relaxed">
+            天然米饭、薯类与杂粮的脂肪含量不足 1%。在制造热量缺口的同时吃够碳水，能<strong>持续激活甲状腺素 T3 与瘦素 (Leptin)</strong>，维持最高代谢速度；同时严格控油让胰岛素无油可储，实现纯脂肪高速燃烧！
+          </p>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-2">
+          <div class="text-cyan-400 font-extrabold text-sm flex items-center gap-1.5">
+            <span>💪</span> <span>2. 骨骼肌糖原容量靶向计算</span>
+          </div>
+          <p class="text-slate-300 leading-relaxed">
+            每 1kg 骨骼肌可储存 14~18g 糖原。系统依据您的实测去脂体重与骨骼肌量，精确计算糖原仓总容量，将碳水精准输送到肌肉，<strong>饱满肌肉维度同时腰腹迅速平坦收紧</strong>。
+          </p>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-2">
+          <div class="text-amber-400 font-extrabold text-sm flex items-center gap-1.5">
+            <span>🦵</span> <span>3. 腿日/推拉日高低错峰配碳</span>
+          </div>
+          <p class="text-slate-300 leading-relaxed">
+            臀腿大肌群训练消耗全身体力 50% 以上！本系统支持一键适配<strong>腿日 (碳水+12%)、拉日 (+6%)、推日 (标准) 与休息日</strong>，彻底消除力量训练无力、头晕或过度饥饿。
+          </p>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-2">
+          <div class="text-rose-400 font-extrabold text-sm flex items-center gap-1.5">
+            <span>🍱</span> <span>4. 告别水煮菜的亚洲胃家常食谱</span>
+          </div>
+          <p class="text-slate-300 leading-relaxed">
+            精选白米饭、肠粉、潮汕卤牛腱、清蒸鲈鱼、白灼虾、水油焖青菜。不用忍受生冷沙拉，顿顿吃饱吃香，自动剔除乳糖与过敏源，执行力拉满！
+          </p>
+        </div>
+      </div>
+
+      <!-- Action Button to Enter System -->
+      <div class="pt-2 flex flex-col sm:flex-row items-center justify-between gap-3 relative z-10 border-t border-white/10">
+        <div class="text-[11px] text-slate-400 text-center sm:text-left">
+          随时可通过顶部导航栏的【📖 High Carb Project 面板】重新查看此理念
+        </div>
+        <button id="btnEnterProjectCTA" type="button" class="w-full sm:w-auto px-6 py-3 rounded-2xl theme-btn-primary text-sm font-extrabold tracking-wide flex items-center justify-center gap-2 shadow-lg">
+          <span>🚀 进入 High Carb Project 制定今日方案</span>
+          <span>→</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Subtle Corner Watermark Badge (Mobile & Desktop friendly) -->
+  <div class="fixed bottom-16 sm:bottom-4 left-3 z-20 pointer-events-none select-none">
+    <div class="px-3 py-1 rounded-full bg-slate-950/85 backdrop-blur-md text-white border border-white/15 text-[11px] font-bold shadow-lg flex items-center gap-2">
+      <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+      <span class="tracking-wide">High Carb Project · by chris</span>
+    </div>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- TOP NAVIGATION HEADER (Redesigned: Sleek, Ultra-Clean)     -->
+  <!-- ========================================================= -->
+  <header class="sticky top-0 z-30 bg-white/90 backdrop-blur-xl border-b border-slate-200/80 shadow-sm transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-3">
+      <!-- Left: Sleek Brand Glyph + Prominent Title & Small "by chris" (Never Squished) -->
+      <div class="flex items-center gap-2.5 sm:gap-3 min-w-0">
+        <div id="brandLogoBox" class="w-9 h-9 sm:w-10 sm:h-10 shrink-0 rounded-2xl theme-btn-primary flex items-center justify-center text-white font-black text-xs sm:text-sm tracking-tight shadow-md cursor-pointer hover:scale-105 active:scale-95 transition" title="点击查看 High Carb Project 理念">
+          HCP
+        </div>
+        <div class="min-w-0 flex flex-col justify-center">
+          <div class="flex items-baseline gap-1.5 sm:gap-2 flex-wrap">
+            <h1 class="text-base sm:text-xl font-black tracking-tight text-slate-900 truncate">
+              High Carb Project
+            </h1>
+            <span class="text-xs font-bold text-slate-400 lowercase tracking-wider">
+              by chris
+            </span>
+          </div>
+          <span id="aestheticModeTag" class="text-[10px] sm:text-[11px] text-slate-400 font-medium truncate hidden xs:block">
+            亚洲体质高碳低脂减脂系统 · 男女双审美
+          </span>
+        </div>
+      </div>
+
+      <!-- Right: Only 2 Sleek Action Buttons (Ultra-Clean, Zero Overlap on Mobile) -->
+      <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
+        <!-- Open Project Philosophy Panel Button -->
+        <button id="btnOpenIntroModal" type="button" class="tactile-btn px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-bold bg-emerald-500/10 text-emerald-800 border border-emerald-500/20 hover:bg-emerald-500/25 transition flex items-center gap-1 shadow-sm">
+          <span>📖</span>
+          <span class="hidden sm:inline">Project 面板</span>
+        </button>
+
+        <!-- Theme Toggle Button -->
+        <button id="btnToggleAesthetic" type="button" class="tactile-btn px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-900 text-white hover:bg-slate-800 transition flex items-center gap-1 shadow-sm" title="切换酷炫男女主题色">
+          <span id="aestheticBtnIcon">🎨</span>
+          <span id="aestheticBtnText" class="hidden sm:inline">切换审美主题</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-5 sm:space-y-6">
+    <!-- Quick Actions & Presets Bar (Spacious, Clean, No Header Clutter) -->
+    <div class="glass-card rounded-2xl p-3 sm:p-3.5 flex flex-wrap items-center justify-between gap-3 shadow-sm border border-slate-200/80">
+      <div class="flex items-center gap-2">
+        <span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse"></span>
+        <span class="text-xs font-extrabold text-slate-800">经典减脂目标快捷载入</span>
+        <span class="text-[11px] text-slate-400 hidden md:inline">· 智能逆向推导饮食缺口与有氧消耗</span>
+      </div>
+      <div class="flex items-center gap-2 flex-wrap">
+        <button id="btnPreset3M10Kg" type="button" class="tactile-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-gradient-to-r from-amber-500/15 to-orange-500/15 text-amber-900 border border-amber-300/80 hover:from-amber-500/25 hover:to-orange-500/25 transition flex items-center gap-1.5 shadow-sm">
+          <span>🔥</span>
+          <span>一键载入：3个月减10kg方案</span>
+        </button>
+        <button id="btnResetDefault" type="button" class="tactile-btn px-2.5 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-slate-900 transition">
+          重置数据
+        </button>
+      </div>
+    </div>
+
+
+    <!-- Top Summary Hero Banner (Futuristic Aurora Glass Dashboard) -->
+    <section class="hero-aurora rounded-3xl p-5 sm:p-7 text-white relative overflow-hidden border border-white/10">
+      <!-- Futuristic Animated Glow Orbs -->
+      <div id="orbPrimary" class="aurora-orb absolute -top-16 -left-16 w-64 h-64 rounded-full bg-emerald-500/25 blur-3xl pointer-events-none"></div>
+      <div id="orbSecondary" class="aurora-orb absolute -bottom-20 right-10 w-72 h-72 rounded-full bg-cyan-500/20 blur-3xl pointer-events-none"></div>
+
+      <!-- Watermark Stamp in Banner -->
+      <div class="absolute right-3 -bottom-3 text-white/[0.04] font-black text-4xl sm:text-6xl select-none pointer-events-none tracking-widest uppercase">
+        High Carb Project · by chris
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 items-center relative z-10">
+        <div class="lg:col-span-5 space-y-3">
+          <div class="flex flex-wrap items-center gap-2">
+            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-emerald-300 text-xs font-bold shadow-sm">
+              <span id="liveModeBadge">⚡ 今日模式：训练日（高碳冲刺·燃脂护肌）</span>
+            </div>
+            <span id="liveSplitBadge" class="inline-flex items-center px-2.5 py-1 rounded-full bg-amber-400/20 border border-amber-300/30 text-amber-200 text-xs font-bold shadow-sm">
+              🦵 腿日/臀腿 · 标准充血
+            </span>
+          </div>
+
+          <div>
+            <div class="text-[11px] uppercase tracking-widest text-slate-400 font-extrabold flex items-center gap-1.5">
+              <span>DAILY TARGET CALORIES</span>
+              <span>·</span>
+              <span>今日精准热量</span>
+            </div>
+            <h2 class="text-3xl sm:text-5xl font-black tracking-tight mt-1 flex items-baseline gap-2">
+              <span id="bannerTargetCalories" class="brand-title-gradient">1,910</span>
+              <span class="text-sm sm:text-base font-bold text-slate-300">kcal / 天</span>
+            </h2>
+          </div>
+
+          <p id="bannerFormulaSummary" class="text-xs sm:text-sm text-slate-300/95 leading-relaxed">
+            已根据您的体重 75.0kg、体脂率 24.0%、骨骼肌 31.4kg、睡眠 7.5h 及【腿日/臀腿】动态锁定。
+          </p>
+
+          <!-- Day Mode Quick Switch with Smooth Pill Style -->
+          <div class="pt-1 flex flex-wrap gap-2">
+            <button type="button" data-daymode="training" class="day-mode-btn tactile-btn px-3.5 py-2 rounded-xl text-xs font-bold theme-btn-primary shadow-md transition">
+              🏋️ 今日是训练日 (高碳低脂)
+            </button>
+            <button type="button" data-daymode="rest" class="day-mode-btn tactile-btn px-3.5 py-2 rounded-xl text-xs font-semibold bg-white/10 text-slate-200 hover:bg-white/20 border border-white/10 transition">
+              🧘 今日是休息日 (适中碳水)
+            </button>
+            <button type="button" data-daymode="refeed" class="day-mode-btn tactile-btn px-3.5 py-2 rounded-xl text-xs font-semibold bg-white/10 text-slate-200 hover:bg-white/20 border border-white/10 transition">
+              🍚 代谢回充日 Refeed (防平台期)
+            </button>
+          </div>
+        </div>
+
+        <!-- 4 Futuristic Macro Cards in Banner -->
+        <div class="lg:col-span-7 grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div class="bg-white/10 backdrop-blur-md rounded-2xl p-3.5 border border-white/15 hover:border-white/30 transition hover:-translate-y-0.5">
+            <div class="flex items-center justify-between text-xs text-slate-300">
+              <span class="font-bold">今日总热量</span>
+              <span id="bannerDeficitTag" class="px-1.5 py-0.5 rounded-md bg-emerald-500/30 text-emerald-200 text-[10px] font-bold">-550 kcal</span>
+            </div>
+            <div class="mt-2 flex items-baseline gap-1">
+              <span id="cardCalorieVal" class="text-2xl sm:text-3xl font-black text-white">1,910</span>
+              <span class="text-xs text-slate-300 font-medium">大卡</span>
+            </div>
+            <div class="w-full h-1.5 bg-white/10 rounded-full overflow-hidden mt-2">
+              <div class="h-full bg-gradient-to-r from-emerald-400 to-cyan-400 rounded-full" style="width: 78%"></div>
+            </div>
+            <div class="mt-2.5 text-[11px] text-slate-300 flex justify-between">
+              <span>基础代谢 BMR:</span>
+              <span id="cardBmrVal" class="font-bold text-white">1,601 kcal</span>
+            </div>
+            <div class="text-[11px] text-slate-300 flex justify-between">
+              <span>今日总耗 TDEE:</span>
+              <span id="cardTdeeVal" class="font-bold text-white">2,460 kcal</span>
+            </div>
+          </div>
+
+          <div class="bg-emerald-500/15 backdrop-blur-md rounded-2xl p-3.5 border border-emerald-400/35 hover:border-emerald-300/60 transition hover:-translate-y-0.5">
+            <div class="flex items-center justify-between text-xs text-emerald-200">
+              <span class="font-bold">🍚 碳水引擎</span>
+              <span id="cardCarbPct" class="font-black text-emerald-300">57%</span>
+            </div>
+            <div class="mt-2 flex items-baseline gap-1">
+              <span id="cardCarbGrams" class="text-2xl sm:text-3xl font-black text-emerald-300">272</span>
+              <span class="text-xs text-emerald-200 font-medium">克/天</span>
+            </div>
+            <div class="w-full h-1.5 bg-emerald-950/60 rounded-full overflow-hidden mt-2 shimmer-track">
+              <div id="barCarbPct" class="h-full bg-emerald-400 rounded-full" style="width: 57%"></div>
+            </div>
+            <div id="cardCarbPerKg" class="mt-2.5 text-[11px] text-emerald-100 font-medium">
+              约 3.6 g/kg 体重
+            </div>
+            <div id="cardCarbSplitHint" class="text-[10px] text-emerald-200/80 truncate">
+              腿日超量充能 · 护代谢
+            </div>
+          </div>
+
+          <div class="bg-sky-500/15 backdrop-blur-md rounded-2xl p-3.5 border border-sky-400/35 hover:border-sky-300/60 transition hover:-translate-y-0.5">
+            <div class="flex items-center justify-between text-xs text-sky-200">
+              <span class="font-bold">🥩 护肌蛋白</span>
+              <span id="cardProteinPct" class="font-black text-sky-300">27%</span>
+            </div>
+            <div class="mt-2 flex items-baseline gap-1">
+              <span id="cardProteinGrams" class="text-2xl sm:text-3xl font-black text-sky-300">128</span>
+              <span class="text-xs text-sky-200 font-medium">克/天</span>
+            </div>
+            <div class="w-full h-1.5 bg-sky-950/60 rounded-full overflow-hidden mt-2 shimmer-track">
+              <div id="barProPct" class="h-full bg-sky-400 rounded-full" style="width: 27%"></div>
+            </div>
+            <div id="cardProteinPerLbm" class="mt-2.5 text-[11px] text-sky-100 font-medium">
+              约 2.2 g/kg 去脂体重
+            </div>
+            <div class="text-[10px] text-sky-200/80">
+              按骨骼肌量锁定防掉肌
+            </div>
+          </div>
+
+          <div class="bg-amber-500/15 backdrop-blur-md rounded-2xl p-3.5 border border-amber-400/35 hover:border-amber-300/60 transition hover:-translate-y-0.5">
+            <div class="flex items-center justify-between text-xs text-amber-200">
+              <span class="font-bold">🥑 严控脂肪</span>
+              <span id="cardFatPct" class="font-black text-amber-300">16%</span>
+            </div>
+            <div class="mt-2 flex items-baseline gap-1">
+              <span id="cardFatGrams" class="text-2xl sm:text-3xl font-black text-amber-300">34</span>
+              <span class="text-xs text-amber-200 font-medium">克/天</span>
+            </div>
+            <div class="w-full h-1.5 bg-amber-950/60 rounded-full overflow-hidden mt-2 shimmer-track">
+              <div id="barFatPct" class="h-full bg-amber-400 rounded-full" style="width: 16%"></div>
+            </div>
+            <div id="cardFatPerKg" class="mt-2.5 text-[11px] text-amber-100 font-medium">
+              约 0.45 g/kg 体重
+            </div>
+            <div class="text-[10px] text-amber-200/80">
+              高碳日严控油防囤脂
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Desktop/Tablet Main Navigation Tabs (Smooth Pill Bar) -->
+    <nav class="hidden sm:flex flex-wrap items-center gap-2 glass-card p-1.5 rounded-2xl" aria-label="功能导航">
+      <button type="button" data-tab="profile" class="main-tab-btn flex-1 min-w-[140px] py-2.5 px-3 rounded-xl text-xs md:text-sm font-bold transition theme-btn-primary flex items-center justify-center gap-1.5">
+        <span>📊</span>
+        <span>1. 身体评测与今日营养目标</span>
+      </button>
+      <button type="button" data-tab="meals" class="main-tab-btn flex-1 min-w-[140px] py-2.5 px-3 rounded-xl text-xs md:text-sm font-semibold transition text-slate-600 hover:bg-slate-100/80 flex items-center justify-center gap-1.5">
+        <span>🍱</span>
+        <span>2. 亚洲胃智能三餐搭配</span>
+      </button>
+      <button type="button" data-tab="guide" class="main-tab-btn flex-1 min-w-[140px] py-2.5 px-3 rounded-xl text-xs md:text-sm font-semibold transition text-slate-600 hover:bg-slate-100/80 flex items-center justify-center gap-1.5">
+        <span>🚦</span>
+        <span>4. 该吃vs不该吃 & 高碳FAQ</span>
+      </button>
+      <button type="button" data-tab="planner" class="main-tab-btn flex-1 min-w-[140px] py-2.5 px-3 rounded-xl text-xs md:text-sm font-semibold transition text-slate-600 hover:bg-slate-100/80 flex items-center justify-center gap-1.5">
+        <span>🎯</span>
+        <span>3. 目标周期规划 (如3个月减10kg)</span>
+      </button>
+    </nav>
+
+    <!-- TAB 1: BODY ASSESSMENT, MUSCLE, SLEEP & TRAINING SPLIT CALCULATOR -->
+    <section id="tab-profile" class="tab-panel grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6">
+      <!-- Left Column: User Body, Muscle Mass, Sleep Quality/Time & Training Split Inputs -->
+      <div class="lg:col-span-7 glass-card rounded-3xl p-4 sm:p-6 space-y-6">
+        <div class="flex items-center justify-between border-b border-slate-200/70 pb-4">
+          <div>
+            <h3 class="text-base sm:text-lg font-black text-slate-900 tracking-tight">身体成分、骨骼肌量与今日训练分化</h3>
+            <p class="text-xs text-slate-500 mt-0.5">自适应男女双审美 · 融合肌肉量、睡眠时间/深度与推拉腿分化动态配碳</p>
+          </div>
+          <span class="px-3 py-1 rounded-full bg-slate-900 text-white text-[11px] font-bold shrink-0 shadow-sm">Chris制作算法</span>
+        </div>
+
+        <!-- Part A: Basic Body Metrics (Gender with Aesthetic Sync, Age, Height, Weight) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1.5">性别（自动联动酷炫男/女主题视觉）</label>
+            <div class="grid grid-cols-2 gap-2.5">
+              <button type="button" id="btnGenderMale" class="tactile-btn py-2.5 px-3 rounded-2xl border-2 text-sm font-bold transition bg-emerald-50 border-emerald-500 text-emerald-900 flex items-center justify-center gap-1.5 shadow-sm">
+                <span>👨</span> <span>男性</span>
+              </button>
+              <button type="button" id="btnGenderFemale" class="tactile-btn py-2.5 px-3 rounded-2xl border text-sm font-bold transition bg-white border-slate-200 text-slate-600 hover:bg-pink-50/40 flex items-center justify-center gap-1.5">
+                <span>👩</span> <span>女性</span>
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <label for="inputAge" class="block text-xs font-bold text-slate-700 mb-1.5">年龄 (岁)</label>
+            <div class="flex items-center gap-2">
+              <input id="inputAge" type="number" min="16" max="80" value="28" class="w-full rounded-2xl border border-slate-300 bg-white/90 px-3.5 py-2.5 text-sm font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-sm transition" />
+              <span class="text-xs font-semibold text-slate-500 shrink-0">岁</span>
+            </div>
+          </div>
+
+          <div>
+            <label for="inputHeight" class="block text-xs font-bold text-slate-700 mb-1.5">身高 (cm)</label>
+            <div class="flex items-center gap-2">
+              <input id="inputHeight" type="number" min="130" max="220" value="172" class="w-full rounded-2xl border border-slate-300 bg-white/90 px-3.5 py-2.5 text-sm font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-sm transition" />
+              <span class="text-xs font-semibold text-slate-500 shrink-0">cm</span>
+            </div>
+          </div>
+
+          <div>
+            <label for="inputWeight" class="block text-xs font-bold text-slate-700 mb-1.5">当前体重 (kg)</label>
+            <div class="flex items-center gap-2">
+              <input id="inputWeight" type="number" min="35" max="200" step="0.5" value="75.0" class="w-full rounded-2xl border border-slate-300 bg-white/90 px-3.5 py-2.5 text-sm font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-sm transition" />
+              <span class="text-xs font-semibold text-slate-500 shrink-0">kg</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Part B: Body Fat % & Enhanced Skeletal Muscle Mass (SMM) Assessment -->
+        <div class="p-4 sm:p-5 rounded-3xl bg-slate-900/[0.03] border border-slate-200/90 space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <label for="inputBodyFat" class="text-xs font-extrabold text-slate-800">1. 当前体脂率 (%)</label>
+              <span id="bfCategoryBadge" class="ml-2 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-100 text-amber-800">体脂偏高·高碳刷脂期</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <input id="inputBodyFat" type="number" min="6" max="55" step="0.5" value="24.0" class="w-20 rounded-xl border border-slate-300 bg-white px-2.5 py-1 text-sm font-black text-emerald-700 text-right shadow-sm" />
+              <span class="text-xs font-bold text-slate-600">%</span>
+            </div>
+          </div>
+          <input id="sliderBodyFat" type="range" min="8" max="45" step="0.5" value="24.0" class="w-full cursor-pointer h-2 bg-slate-200 rounded-lg" />
+          <div class="flex justify-between text-[11px] text-slate-400 font-medium">
+            <span>8% (竞技体脂)</span>
+            <span>15% (清晰线条)</span>
+            <span>22% (匀称健康)</span>
+            <span>30%+ (需重点减脂)</span>
+          </div>
+
+          <!-- Dedicated Skeletal Muscle Mass Interactive Panel -->
+          <div class="pt-4 border-t border-slate-200/80 space-y-3">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div class="flex items-center gap-2">
+                <label for="inputMuscleMass" class="text-xs font-extrabold text-slate-800">2. 客户骨骼肌量 (Skeletal Muscle, kg)</label>
+                <span id="muscleGradeBadge" class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-sky-100 text-sky-800">✨ 标准骨骼肌量</span>
+              </div>
+              <label class="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-800 cursor-pointer bg-emerald-500/10 px-2.5 py-1 rounded-xl border border-emerald-500/20 hover:bg-emerald-500/15 transition">
+                <input id="chkManualMuscle" type="checkbox" class="rounded text-emerald-600 focus:ring-emerald-500" />
+                <span>开启体测仪/手环肌肉量校准</span>
+              </label>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 items-center">
+              <div class="sm:col-span-8">
+                <input id="sliderMuscleMass" type="range" min="15" max="60" step="0.5" value="31.4" class="w-full cursor-pointer h-2 bg-slate-200 rounded-lg" />
+                <div class="flex justify-between text-[10px] text-slate-400 mt-0.5 font-medium">
+                  <span>18kg (基础偏弱)</span>
+                  <span>28kg (亚洲平均)</span>
+                  <span>35kg (规律撸铁)</span>
+                  <span>45kg+ (肌肉大神)</span>
+                </div>
+              </div>
+              <div class="sm:col-span-4 flex items-center gap-1.5">
+                <input id="inputMuscleMass" type="number" min="15" max="80" step="0.1" value="31.4" class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm font-black text-sky-700 text-right focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-sm" />
+                <span class="text-xs font-bold text-slate-600 shrink-0">kg</span>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+              <div class="p-3 rounded-2xl bg-white border border-slate-200/80 text-[11px] text-slate-600 shadow-sm">
+                <span id="muscleHintText" class="block font-semibold text-slate-700">自动根据去脂体重 (57.0kg) 推算骨骼肌</span>
+                <span id="muscleMetabolicImpact" class="text-emerald-700 font-bold mt-0.5 block">肌脂比 1.74 · 肌肉糖原仓容量约 440g</span>
+              </div>
+              <div>
+                <div class="flex items-center justify-between mb-1">
+                  <label for="inputCustomBmr" class="text-xs font-bold text-slate-700">基础代谢率 BMR (kcal)</label>
+                  <label class="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700 cursor-pointer">
+                    <input id="chkManualBmr" type="checkbox" class="rounded text-emerald-600 focus:ring-emerald-500" />
+                    <span>手动锁死BMR</span>
+                  </label>
+                </div>
+                <input id="inputCustomBmr" type="number" min="800" max="3500" step="10" value="1601" disabled class="w-full rounded-xl border border-slate-200 bg-slate-100 px-3 py-1.5 text-sm font-bold text-slate-700 disabled:opacity-75" />
+                <p id="bmrHintText" class="text-[10px] text-slate-500 mt-0.5">已按去脂体重+肌肉占比智能修正</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Part C: Sleep Quality / Duration & Training Style & Dietary Restrictions -->
+        <div class="p-4 sm:p-5 rounded-3xl bg-gradient-to-br from-indigo-500/[0.05] via-purple-500/[0.04] to-emerald-500/[0.05] border border-indigo-200/60 space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <h4 class="text-xs font-extrabold text-slate-900 flex items-center gap-1.5">
+              <span>🌙</span>
+              <span>3. 睡眠质量 / 时间 & 训练风格评估</span>
+            </h4>
+            <span id="sleepRecoveryBadge" class="text-[11px] px-2.5 py-0.5 rounded-full bg-indigo-100 text-indigo-800 font-bold">
+              睡眠 7.5h · 深度恢复佳
+            </span>
+          </div>
+
+          <!-- Sleep Duration Slider + Sleep Weight/Quality Selector -->
+          <div class="grid grid-cols-1 sm:grid-cols-12 gap-4 items-center bg-white/90 p-3.5 rounded-2xl border border-slate-200/70 shadow-sm">
+            <div class="sm:col-span-7 space-y-1.5">
+              <div class="flex items-center justify-between">
+                <label for="inputSleepHours" class="text-xs font-bold text-slate-700">每日睡眠时间 (小时)</label>
+                <div class="flex items-center gap-1">
+                  <input id="inputSleepHours" type="number" min="4" max="11" step="0.5" value="7.5" class="w-16 rounded-lg border border-slate-300 px-2 py-0.5 text-xs font-black text-indigo-700 text-right" />
+                  <span class="text-xs font-semibold text-slate-500">小时/天</span>
+                </div>
+              </div>
+              <input id="sliderSleepHours" type="range" min="4.5" max="10" step="0.5" value="7.5" class="w-full cursor-pointer h-2 bg-slate-200 rounded-lg" />
+              <div class="flex justify-between text-[10px] text-slate-400 font-medium">
+                <span>&lt;6h (缺觉易掉肌)</span>
+                <span>7~8h (黄金燃脂睡眠)</span>
+                <span>9h+ (深度超量恢复)</span>
+              </div>
+            </div>
+
+            <div class="sm:col-span-5">
+              <label for="selectSleepQuality" class="block text-xs font-bold text-slate-700 mb-1">睡眠质量 / 深度比重</label>
+              <select id="selectSleepQuality" class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-sm">
+                <option value="deep" selected>🌟 深度好眠 (起床精力充沛·代谢满分)</option>
+                <option value="normal">😴 睡眠尚可 (偶有夜醒·正常恢复)</option>
+                <option value="light">🐼 浅眠/熬夜晚睡 (晚餐需留慢碳助眠稳糖)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 items-center">
+            <div>
+              <label for="selectTrainingStyle" class="block text-xs font-bold text-slate-700 mb-1">客户主要训练风格</label>
+              <select id="selectTrainingStyle" class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-sm">
+                <option value="hypertrophy" selected>🏋️ 肌肥大/传统撸铁 (极度依赖肌糖原泵感)</option>
+                <option value="glute_shaping">🍑 臀腿塑形/女生线条 (重下肢代谢与紧致度)</option>
+                <option value="hiit_crossfit">🔥 HIIT/燃脂团课/搏击 (高心率糖酵解供能)</option>
+                <option value="endurance">🏃 跑步/骑行/球类耐力 (需高比例慢碳储备)</option>
+                <option value="home_novice">🧘 居家自重/帕梅拉/新手 (温和控热高饱腹)</option>
+              </select>
+            </div>
+
+            <!-- Dietary Restriction Checkboxes -->
+            <div>
+              <span class="block text-xs font-bold text-slate-700 mb-1.5">饮食忌口（勾选自动替换三餐食材）：</span>
+              <div class="flex flex-wrap gap-2.5 text-xs bg-white/90 p-2 rounded-xl border border-slate-200/70 shadow-sm">
+                <label class="inline-flex items-center gap-1 cursor-pointer text-slate-700 font-semibold hover:text-emerald-700 transition">
+                  <input type="checkbox" id="chkNoLactose" class="rounded text-emerald-600 focus:ring-emerald-500" />
+                  <span>🥛 乳糖不耐</span>
+                </label>
+                <label class="inline-flex items-center gap-1 cursor-pointer text-slate-700 font-semibold hover:text-emerald-700 transition">
+                  <input type="checkbox" id="chkNoSeafood" class="rounded text-emerald-600 focus:ring-emerald-500" />
+                  <span>🦐 海鲜过敏</span>
+                </label>
+                <label class="inline-flex items-center gap-1 cursor-pointer text-slate-700 font-semibold hover:text-emerald-700 transition">
+                  <input type="checkbox" id="chkNoPork" class="rounded text-emerald-600 focus:ring-emerald-500" />
+                  <span>🥩 不吃猪肉</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Part D: Today's Training Split (Leg Day, Push Day, Pull Day) & Intensity -->
+        <div class="space-y-4 pt-2 border-t border-slate-200/70">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <label class="text-xs font-black text-slate-900">4. 今日训练部位分化（推 / 拉 / 腿 / 全身 / 休息）</label>
+              <p class="text-[11px] text-slate-500">练腿日比胸背日多消耗 15%~25% 肌糖原，系统按分化自动靶向增减碳水</p>
+            </div>
+            <span id="splitCarbBonusBadge" class="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-xs font-black">腿日碳水加成 +12%</span>
+          </div>
+
+          <div class="grid grid-cols-2 sm:grid-cols-5 gap-2">
+            <button type="button" data-split="leg" class="split-btn tactile-btn p-2.5 rounded-2xl border-2 border-emerald-500 bg-emerald-50 text-left transition shadow-sm">
+              <div class="text-xs font-black text-emerald-950">🦵 腿日 / 臀腿</div>
+              <div class="text-[10px] text-emerald-700 mt-0.5 font-medium">最大肌群 · 碳水拉满</div>
+            </button>
+            <button type="button" data-split="pull" class="split-btn tactile-btn p-2.5 rounded-2xl border border-slate-200 bg-white text-left hover:bg-slate-50 transition">
+              <div class="text-xs font-bold text-slate-800">🏋️ 拉日 (背/二头)</div>
+              <div class="text-[10px] text-slate-500 mt-0.5">后链大肌群 · 次高碳</div>
+            </button>
+            <button type="button" data-split="push" class="split-btn tactile-btn p-2.5 rounded-2xl border border-slate-200 bg-white text-left hover:bg-slate-50 transition">
+              <div class="text-xs font-bold text-slate-800">💪 推日 (胸/肩/三头)</div>
+              <div class="text-[10px] text-slate-500 mt-0.5">上肢肌群 · 标准高碳</div>
+            </button>
+            <button type="button" data-split="full_hiit" class="split-btn tactile-btn p-2.5 rounded-2xl border border-slate-200 bg-white text-left hover:bg-slate-50 transition">
+              <div class="text-xs font-bold text-slate-800">🔥 全身 / HIIT团课</div>
+              <div class="text-[10px] text-slate-500 mt-0.5">高心率燃脂 · 快慢碳</div>
+            </button>
+            <button type="button" data-split="rest_cardio" class="split-btn tactile-btn col-span-2 sm:col-span-1 p-2.5 rounded-2xl border border-slate-200 bg-white text-left hover:bg-slate-50 transition">
+              <div class="text-xs font-bold text-slate-800">🧘 休息 / 纯有氧</div>
+              <div class="text-[10px] text-slate-500 mt-0.5">回调碳水 · 稳胰岛素</div>
+            </button>
+          </div>
+
+          <!-- Today's Training Intensity & Weekly Frequency -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
+            <div>
+              <label class="block text-xs font-bold text-slate-800 mb-1.5">今日训练强度 & 时长</label>
+              <div class="grid grid-cols-3 gap-1.5">
+                <button type="button" data-intensity="light" class="intensity-btn tactile-btn py-2 px-2 rounded-xl border border-slate-200 bg-white text-center text-xs font-semibold text-slate-600 hover:bg-slate-50 transition">
+                  <div>轻度恢复</div>
+                  <div class="text-[10px] font-normal text-slate-400">30-45分</div>
+                </button>
+                <button type="button" data-intensity="moderate" class="intensity-btn tactile-btn py-2 px-2 rounded-xl border-2 border-emerald-500 bg-emerald-50 text-center text-xs font-bold text-emerald-900 transition shadow-sm">
+                  <div>标准充血</div>
+                  <div class="text-[10px] font-normal text-emerald-700">45-65分</div>
+                </button>
+                <button type="button" data-intensity="heavy" class="intensity-btn tactile-btn py-2 px-2 rounded-xl border border-slate-200 bg-white text-center text-xs font-semibold text-slate-600 hover:bg-slate-50 transition">
+                  <div>力竭冲刺</div>
+                  <div class="text-[10px] font-normal text-slate-400">70-90分</div>
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <div class="flex items-center justify-between mb-1.5">
+                <label class="text-xs font-bold text-slate-800">每周训练频次基数</label>
+                <span id="trainingMultiplierLabel" class="text-xs font-bold text-emerald-700">活动系数 ×1.48</span>
+              </div>
+              <div class="grid grid-cols-5 gap-1">
+                <button type="button" data-freq="0" class="freq-btn tactile-btn py-1.5 px-1 rounded-xl border border-slate-200 bg-white text-center hover:bg-slate-50 transition">
+                  <div class="text-[11px] font-bold text-slate-800">久坐少动</div>
+                  <div class="text-[11px] text-slate-500">0次/周 · ×1.20</div>
+                </button>
+                <button type="button" data-freq="2" class="freq-btn tactile-btn py-1.5 px-1 rounded-xl border border-slate-200 bg-white text-center hover:bg-slate-50 transition">
+                  <div class="text-[11px] font-bold text-slate-800">轻度训练</div>
+                  <div class="text-[11px] text-slate-500">1-2次/周 · ×1.35</div>
+                </button>
+                <button type="button" data-freq="4" class="freq-btn tactile-btn py-1.5 px-1 rounded-xl border-2 border-emerald-500 bg-emerald-50 text-center transition shadow-sm">
+                  <div class="text-[11px] font-bold text-emerald-900">中度规律</div>
+                  <div class="text-[11px] text-emerald-700">3-4次/周 · ×1.48</div>
+                </button>
+                <button type="button" data-freq="5" class="freq-btn tactile-btn py-1.5 px-1 rounded-xl border border-slate-200 bg-white text-center hover:bg-slate-50 transition">
+                  <div class="text-[11px] font-bold text-slate-800">高频力量</div>
+                  <div class="text-[11px] text-slate-500">5-6次/周 · ×1.62</div>
+                </button>
+                <button type="button" data-freq="7" class="freq-btn tactile-btn py-1.5 px-1 rounded-xl border border-slate-200 bg-white text-center hover:bg-slate-50 transition">
+                  <div class="text-[11px] font-bold text-slate-800">高强双练</div>
+                  <div class="text-[11px] text-slate-500">每日高强 · ×1.75</div>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- High-Carb Strategy Selector -->
+        <div class="space-y-3 pt-2 border-t border-slate-200/70">
+          <div class="flex items-center justify-between">
+            <label class="text-xs font-black text-slate-800">高碳减脂模型挡位（自动适配体脂率与训练量）</label>
+            <span id="carbStrategyRecBadge" class="text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full">系统已为您匹配最佳挡位</span>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+            <button type="button" data-strategy="standard_hc" class="strategy-btn tactile-btn p-3 rounded-2xl border-2 border-emerald-500 bg-emerald-50/80 text-left transition shadow-sm">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-black text-emerald-950">经典高碳低脂 (55/27/18)</span>
+                <span class="text-[10px] px-1.5 py-0.5 rounded-md bg-emerald-200 text-emerald-900 font-bold">推荐</span>
+              </div>
+              <p class="text-[11px] text-emerald-800 mt-1">适合体脂 15%~26%、规律训练者，兼顾训练泵感与高效脱脂</p>
+            </button>
+            <button type="button" data-strategy="extreme_hc" class="strategy-btn tactile-btn p-3 rounded-2xl border border-slate-200 bg-white text-left hover:bg-slate-50 transition">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-slate-800">进阶高碳极低脂 (60/25/15)</span>
+              </div>
+              <p class="text-[11px] text-slate-500 mt-1">适合腿日/背部大肌群训练日、肌肉量大、需要拉满肌糖原人群</p>
+            </button>
+            <button type="button" data-strategy="gentle_hc" class="strategy-btn tactile-btn p-3 rounded-2xl border border-slate-200 bg-white text-left hover:bg-slate-50 transition">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-slate-800">温和控脂高碳 (50/30/20)</span>
+              </div>
+              <p class="text-[11px] text-slate-500 mt-1">适合体脂率 &gt;26% 或久坐新手，提高蛋白质饱腹感并改善胰岛素敏感度</p>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Metabolic Analysis & Today's Exact Macro Prescription -->
+      <div class="lg:col-span-5 space-y-6">
+        <div class="glass-card rounded-3xl p-4 sm:p-6 space-y-5">
+          <div class="flex items-center justify-between">
+            <h3 class="text-base font-black text-slate-900">身体成分与今日训练营养处方</h3>
+            <div class="flex items-center gap-1.5">
+              <span id="smiBadge" class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-sky-50 text-sky-700 border border-sky-200">肌脂比 1.74</span>
+              <span id="bmiBadge" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-slate-100 text-slate-700">BMI 25.4</span>
+            </div>
+          </div>
+
+          <!-- Body Composition Mini Grid -->
+          <div class="grid grid-cols-3 gap-2.5 text-center">
+            <div class="p-3 rounded-2xl bg-slate-50/90 border border-slate-200/70 hover:scale-[1.02] transition">
+              <div class="text-[11px] text-slate-500 font-semibold">去脂体重 (LBM)</div>
+              <div id="statLbm" class="text-base font-black text-slate-900 mt-0.5">57.0 kg</div>
+              <div class="text-[10px] text-emerald-600 font-bold">决定基础代谢核心</div>
+            </div>
+            <div class="p-3 rounded-2xl bg-sky-50/70 border border-sky-200/80 hover:scale-[1.02] transition">
+              <div class="text-[11px] text-sky-700 font-bold">骨骼肌质量</div>
+              <div id="statSmm" class="text-base font-black text-sky-900 mt-0.5">31.4 kg</div>
+              <div id="statMuscleRate" class="text-[10px] text-sky-600 font-bold">占体重 41.8%</div>
+            </div>
+            <div class="p-3 rounded-2xl bg-slate-50/90 border border-slate-200/70 hover:scale-[1.02] transition">
+              <div class="text-[11px] text-slate-500 font-semibold">当前脂肪重量</div>
+              <div id="statFatMass" class="text-base font-black text-slate-900 mt-0.5">18.0 kg</div>
+              <div id="statWaterTarget" class="text-[10px] text-amber-600 font-bold">建议饮水 2,850ml</div>
+            </div>
+          </div>
+
+          <!-- Chart: Macro Distribution Doughnut -->
+          <div class="relative h-52">
+            <canvas id="macroDoughnutChart"></canvas>
+          </div>
+
+          <!-- Meal Split Table for Today -->
+          <div class="space-y-2">
+            <div class="flex items-center justify-between">
+              <h4 class="text-xs font-black text-slate-800">今日四餐热量与碳水靶向分配（适配今日训练与睡眠）</h4>
+              <button type="button" id="btnGoToMeals" class="text-xs font-bold text-emerald-600 hover:text-emerald-700 transition flex items-center gap-1">查看今日具体菜谱 →</button>
+            </div>
+            <div class="overflow-x-auto custom-scrollbar">
+              <table class="w-full text-xs text-left border-collapse">
+                <thead>
+                  <tr class="border-b border-slate-200 text-slate-500">
+                    <th class="py-2 font-bold">餐次</th>
+                    <th class="py-2 font-bold text-right">热量</th>
+                    <th class="py-2 font-bold text-right text-emerald-700">碳水(g)</th>
+                    <th class="py-2 font-bold text-right text-sky-700">蛋白(g)</th>
+                    <th class="py-2 font-bold text-right text-amber-700">脂肪(g)</th>
+                  </tr>
+                </thead>
+                <tbody id="mealSplitTableBody" class="divide-y divide-slate-100 font-semibold text-slate-700">
+                  <!-- Populated by JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Why High-Carb Fat Loss Works for This User + Split Specific Advice -->
+          <div id="personalizedAdviceBox" class="p-4 rounded-2xl bg-gradient-to-br from-emerald-50/90 to-teal-50/70 border border-emerald-200/80 text-xs text-emerald-950 space-y-1.5 leading-relaxed shadow-sm">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 2: ASIAN SMART MEAL PLANNER -->
+    <section id="tab-meals" class="tab-panel hidden space-y-6">
+      <!-- Top Filter & Regional Preference Bar -->
+      <div class="glass-card rounded-3xl p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div class="space-y-1">
+          <div class="flex flex-wrap items-center gap-2">
+            <h3 class="text-base sm:text-lg font-black text-slate-900">亚洲胃智能高碳配餐引擎</h3>
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">份量已按您今日肌肉量与训练部位折算</span>
+          </div>
+          <p class="text-xs text-slate-500">
+            告别水煮鸡胸与生冷沙拉！精选白米饭、杂粮饭、荞麦面、红薯、清蒸鱼虾、卤牛肉、豆腐等亚洲家常食材，严控隐形烹调油。
+          </p>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2">
+          <select id="selectCuisinePref" aria-label="亚洲饮食风味偏好" class="rounded-xl border border-slate-300 px-3 py-2 text-xs font-bold text-slate-800 bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-sm">
+            <option value="all">🌏 全部亚洲家常风味 (综合推荐)</option>
+            <option value="chinese_home">🥢 中式家常蒸炒/卤味风</option>
+            <option value="cantonese_nanyang">🍲 粤式清鲜/南洋星马泰风</option>
+            <option value="japanese_korean">🍙 日韩定食/少油汤锅风</option>
+            <option value="convenience">🏪 外食/便利店极速打工人风</option>
+          </select>
+
+          <button type="button" id="btnShuffleAllMeals" class="tactile-btn px-3.5 py-2 rounded-xl theme-btn-primary text-xs font-bold transition flex items-center gap-1.5 shadow-sm">
+            <span>🔄</span>
+            <span>一键智能换全天食谱</span>
+          </button>
+
+          <button type="button" id="btnCopyMealPlan" class="tactile-btn px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition flex items-center gap-1.5">
+            <span>📋</span>
+            <span>复制今日采购与备餐单</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 4 Meal Cards Grid -->
+      <div id="mealsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
+        <!-- Populated dynamically by JS -->
+      </div>
+
+      <!-- Asian High-Carb Food Exchange Reference Card -->
+      <div class="glass-card rounded-3xl p-4 sm:p-6 space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div>
+            <h4 class="text-base font-black text-slate-900">亚洲食材等量互换速查表（自由替换不破功）</h4>
+            <p class="text-xs text-slate-500">高碳减脂的核心秘诀是“高碳水 + 高蛋白 + 严控炒菜油”。以下同组食材可按等营养价值直接互换：</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <input id="inputFoodSearch" type="text" placeholder="搜索食材（如：肠粉、米线、牛肉、虾）..." class="rounded-xl border border-slate-300 px-3 py-1.5 text-xs w-full sm:w-60 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-sm" />
+          </div>
+        </div>
+
+        <div id="foodDatabaseGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 max-h-80 overflow-y-auto custom-scrollbar pr-1">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: WHAT TO EAT VS NOT TO EAT & HIGH-CARB FAQ -->
+    <section id="tab-guide" class="tab-panel hidden space-y-6">
+      <!-- Traffic Light Food Guide Header -->
+      <div class="glass-card rounded-3xl p-4 sm:p-6 space-y-5">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-4">
+          <div>
+            <h3 class="text-lg font-black text-slate-900">High Carb Project：客户该吃什么 vs 绝对不该吃什么（红黄绿灯法则）</h3>
+            <p class="text-xs text-slate-500 mt-0.5">
+              高碳减脂之所以能大口吃米饭还狂掉秤，底层逻辑是<strong>“高碳水激起胰岛素填充肌糖原 + 极低脂肪让胰岛素无油可存”</strong>。一旦碰了红灯区的“糖油混合物”，减脂立刻停滞！
+            </p>
+          </div>
+          <span class="px-3 py-1 rounded-full bg-slate-900 text-emerald-300 text-xs font-bold shrink-0">
+            Chris制作 · 饮食避坑指南
+          </span>
+        </div>
+
+        <!-- 3 Columns: Green (Eat Freely), Yellow (Moderate), Red (Strictly Avoid) -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+          <!-- GREEN LIGHT -->
+          <div class="rounded-2xl border-2 border-emerald-500/80 bg-emerald-50/40 p-4 sm:p-5 space-y-3 hover:-translate-y-1 transition duration-200">
+            <div class="flex items-center justify-between">
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-600 text-white text-xs font-bold">
+                🟢 绿灯食物：放心吃够克数
+              </span>
+              <span class="text-xs font-bold text-emerald-800">高碳低脂 · 纯瘦蛋白</span>
+            </div>
+            <p class="text-xs text-emerald-900">天然几乎不含脂肪的优质碳水 + 脂肪率低于 4% 的优质蛋白 + 所有绿叶菌菇蔬菜：</p>
+
+            <div class="space-y-2.5 text-xs">
+              <div class="p-3 rounded-xl bg-white border border-emerald-200 shadow-sm">
+                <div class="font-bold text-emerald-900 mb-1">🍚 推荐主食碳水（脂肪 &lt; 1.5%）</div>
+                <p class="text-slate-600 leading-relaxed">白米饭、东北大米、糙米杂粮饭、蒸红薯/紫薯、铁棍山药、芋头、土豆（蒸/煮）、纯燕麦片、荞麦面、非油炸米粉/米线、少油瘦肉肠粉、全麦馒头、甜玉米。</p>
+              </div>
+              <div class="p-3 rounded-xl bg-white border border-emerald-200 shadow-sm">
+                <div class="font-bold text-sky-900 mb-1">🦐 推荐纯瘦蛋白（高蛋白极低脂）</div>
+                <p class="text-slate-600 leading-relaxed">去皮鸡胸肉、鸡里脊、白灼虾/青虾仁、清蒸鲈鱼/鳕鱼/龙利鱼、蛤蜊/生蚝、卤牛腱子/瘦吊龙、猪里脊、鸡蛋白（不限量）、脱脂牛奶、无糖豆浆。</p>
+              </div>
+              <div class="p-3 rounded-xl bg-white border border-emerald-200 shadow-sm">
+                <div class="font-bold text-teal-900 mb-1">🥬 推荐高纤蔬菜与调味</div>
+                <p class="text-slate-600 leading-relaxed">菜心、芥蓝、菠菜、上海青、西兰花、黑木耳、金针菇、海带、冬瓜、番茄；调味用生抽、陈醋、蒜末、小米辣、黑胡椒、代糖、蒸鱼豉油。</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- YELLOW LIGHT -->
+          <div class="rounded-2xl border-2 border-amber-400/80 bg-amber-50/40 p-4 sm:p-5 space-y-3 hover:-translate-y-1 transition duration-200">
+            <div class="flex items-center justify-between">
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-500 text-white text-xs font-bold">
+                🟡 黄灯食物：严控份量与时机
+              </span>
+              <span class="text-xs font-bold text-amber-800">计入今日脂肪/碳水额度</span>
+            </div>
+            <p class="text-xs text-amber-900">营养优质但自带一定天然脂肪或果糖，需严格按克数吃，更适合放在<strong>休息日</strong>或<strong>早餐/练后</strong>：</p>
+
+            <div class="space-y-2.5 text-xs">
+              <div class="p-3 rounded-xl bg-white border border-amber-200 shadow-sm">
+                <div class="font-bold text-amber-900 mb-1">🥚 自带脂肪的优质蛋白（限额吃）</div>
+                <p class="text-slate-600 leading-relaxed">全蛋蛋黄（每天限 1~2 颗，其余吃蛋白）、三文鱼（每周 1~2 次，优选休息日）、北豆腐/千张、低脂牛奶、去皮鸡腿肉。</p>
+              </div>
+              <div class="p-3 rounded-xl bg-white border border-amber-200 shadow-sm">
+                <div class="font-bold text-amber-900 mb-1">🥑 健康油脂（全天总和 ≤ 脂肪上限）</div>
+                <p class="text-slate-600 leading-relaxed">初榨橄榄油/茶籽油（用喷油壶，每餐 ≤ 3~5g）、原味坚果（每天限 10g 约 6 颗巴旦木，高碳训练日尽量不吃）、牛油果（每次小半颗）。</p>
+              </div>
+              <div class="p-3 rounded-xl bg-white border border-amber-200 shadow-sm">
+                <div class="font-bold text-amber-900 mb-1">🍌 水果类（果糖优先充肝糖原）</div>
+                <p class="text-slate-600 leading-relaxed">香蕉（仅限训练前/后吃 1 根）、蓝莓/草莓/圣女果/苹果/柚子（每天 150~200g）；切勿用大量高糖水果代替米饭主食。</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- RED LIGHT -->
+          <div class="rounded-2xl border-2 border-rose-500/80 bg-rose-50/40 p-4 sm:p-5 space-y-3 hover:-translate-y-1 transition duration-200">
+            <div class="flex items-center justify-between">
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-rose-600 text-white text-xs font-bold">
+                🔴 红灯食物：高碳期绝对禁区
+              </span>
+              <span class="text-xs font-bold text-rose-800">糖油混合物 = 储脂炸弹</span>
+            </div>
+            <p class="text-xs text-rose-900">高碳减脂期胰岛素活跃，此时一旦吃下<strong>“高碳水 + 高油脂”</strong>，身体会停止燃脂并把油脂100%锁进脂肪细胞：</p>
+
+            <div class="space-y-2.5 text-xs">
+              <div class="p-3 rounded-xl bg-white border border-rose-200 shadow-sm">
+                <div class="font-bold text-rose-900 mb-1">🥐 中西式“糖油混合”假主食</div>
+                <p class="text-slate-600 leading-relaxed">油条、油饼、葱油拌面、扬州炒饭、干炒牛河（吸饱炒菜油）、方便面、螺蛳粉红油汤、牛角包/酥皮面包、蛋糕西点、糯米烧麦（猪肉油拌糯米）。</p>
+              </div>
+              <div class="p-3 rounded-xl bg-white border border-rose-200 shadow-sm">
+                <div class="font-bold text-rose-900 mb-1">🥓 高脂肥肉与油炸蛋白</div>
+                <p class="text-slate-600 leading-relaxed">五花肉、红烧肉、肥牛卷/肥羊卷、排骨、猪蹄、鸡皮/鸭皮、炸鸡排、油焖大虾、油豆腐/腐竹（吸油海绵）、烤肠。</p>
+              </div>
+              <div class="p-3 rounded-xl bg-white border border-rose-200 shadow-sm">
+                <div class="font-bold text-rose-900 mb-1">🥫 隐形油脂刺客与含糖饮品</div>
+                <p class="text-slate-600 leading-relaxed">沙拉酱/千岛酱/蛋黄酱（1勺=15g纯油）、麻酱/花生酱、老干妈红油、浓白骨汤（实为乳化脂肪）、全糖奶茶、果茶、含糖碳酸饮料、酒精。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- High-Carb Fat Loss Interactive FAQ Accordion -->
+      <div class="glass-card rounded-3xl p-4 sm:p-6 space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-3">
+          <div>
+            <h3 class="text-lg font-black text-slate-900">高碳减脂核心答疑 FAQ（新手必看 7 大真相）</h3>
+            <p class="text-xs text-slate-500">点击问题即可展开详细运动营养学原理解析，帮客户彻底打消“吃米饭会胖”的顾虑</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button type="button" id="btnExpandAllFaq" class="tactile-btn px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition">
+              全部展开 / 收起
+            </button>
+          </div>
+        </div>
+
+        <div id="faqAccordionContainer" class="space-y-3">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 4: GOAL TIMELINE PLANNER (e.g. Lose 10kg in 3 Months) -->
+    <section id="tab-planner" class="tab-panel hidden space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Goal Parameters & Calculation Box -->
+        <div class="lg:col-span-5 glass-card rounded-3xl p-4 sm:p-6 space-y-5">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <div>
+              <h3 class="text-lg font-black text-slate-900">减脂目标与周期逆向推演</h3>
+              <p class="text-xs text-slate-500">1 kg 纯脂肪 ≈ 7,700 kcal 热量缺口，科学拆分饮食控制与运动消耗</p>
+            </div>
+            <button type="button" id="btnApply3M10KInline" class="tactile-btn px-2.5 py-1 rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold hover:bg-emerald-100 shrink-0">
+              设为“3个月减10kg”
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label for="inputTargetWeightLoss" class="block text-xs font-bold text-slate-700 mb-1">计划减重目标 (kg)</label>
+              <div class="flex items-center gap-2">
+                <input id="inputTargetWeightLoss" type="number" min="1" max="50" step="0.5" value="10.0" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm font-black text-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-sm" />
+                <span class="text-xs text-slate-500 shrink-0 font-semibold">kg</span>
+              </div>
+              <p id="goalEndWeightText" class="text-[11px] text-slate-500 mt-1 font-medium">目标体重：65.0 kg</p>
+            </div>
+
+            <div>
+              <label for="inputTargetWeeks" class="block text-xs font-bold text-slate-700 mb-1">计划周期 (周 / 月)</label>
+              <div class="flex items-center gap-2">
+                <input id="inputTargetWeeks" type="number" min="2" max="52" step="1" value="12" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm font-black text-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-sm" />
+                <span class="text-xs text-slate-500 shrink-0 font-semibold">周</span>
+              </div>
+              <p id="goalMonthsText" class="text-[11px] text-slate-500 mt-1 font-medium">约 3.0 个月 (84 天)</p>
+            </div>
+          </div>
+
+          <!-- Diet vs Extra Cardio Split Slider -->
+          <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
+            <div class="flex items-center justify-between">
+              <label for="sliderDietShare" class="text-xs font-bold text-slate-800">每日缺口分摊：饮食少吃 vs 额外有氧/步数消耗</label>
+              <span id="splitRatioLabel" class="text-xs font-bold text-emerald-700">饮食 65% / 运动 35%</span>
+            </div>
+            <input id="sliderDietShare" type="range" min="40" max="90" step="5" value="65" class="w-full cursor-pointer h-2 bg-slate-200 rounded-lg" />
+            <div class="flex justify-between text-[11px] text-slate-500 font-medium">
+              <span>多动少饿 (保基础代谢)</span>
+              <span>均衡组合 (推荐)</span>
+              <span>纯靠嘴控 (易低于BMR)</span>
+            </div>
+          </div>
+
+          <!-- Breakdown Metrics Card -->
+          <div class="space-y-2.5 text-xs">
+            <div class="flex justify-between py-2 border-b border-slate-100">
+              <span class="text-slate-500 font-medium">需累计制造总热量缺口：</span>
+              <span id="planTotalDeficit" class="font-black text-slate-900">77,000 kcal</span>
+            </div>
+            <div class="flex justify-between py-2 border-b border-slate-100">
+              <span class="text-slate-500 font-medium">平均每周需减重：</span>
+              <span id="planWeeklyLoss" class="font-black text-emerald-700">0.83 kg / 周 (占体重 1.11%)</span>
+            </div>
+            <div class="flex justify-between py-2 border-b border-slate-100">
+              <span class="text-slate-500 font-medium">每日总热量缺口目标：</span>
+              <span id="planDailyTotalDeficit" class="font-black text-slate-900">917 kcal / 天</span>
+            </div>
+            <div class="flex justify-between py-2 border-b border-slate-100">
+              <span class="text-slate-500 font-medium">├─ 饮食热量缺口 (比TDEE少吃)：</span>
+              <span id="planDietDeficit" class="font-black text-emerald-700">-596 kcal (每日吃 1,774 kcal)</span>
+            </div>
+            <div class="flex justify-between py-2 border-b border-slate-100">
+              <span class="text-slate-500 font-medium">└─ 每日额外活动/有氧消耗：</span>
+              <span id="planCardioDeficit" class="font-black text-sky-700">+321 kcal (约快走 7,500 步或慢跑30分)</span>
+            </div>
+          </div>
+
+          <!-- Safety & Feasibility Alert Box -->
+          <div id="planSafetyBox" class="p-3.5 rounded-2xl border text-xs leading-relaxed">
+            <!-- Populated by JS -->
+          </div>
+
+          <button type="button" id="btnSyncGoalToDaily" class="w-full py-3 px-4 rounded-2xl theme-btn-primary text-xs font-black transition">
+            ✨ 将此目标热量与宏量一键同步至“今日三餐配餐”
+          </button>
+        </div>
+
+        <!-- Right Column: 12-Week Projection Chart & 3-Phase Action Roadmap -->
+        <div class="lg:col-span-7 space-y-6">
+          <div class="glass-card rounded-3xl p-4 sm:p-6 space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div>
+                <h3 class="text-base font-black text-slate-900">周期体重与体脂率双轨预测曲线</h3>
+                <p class="text-xs text-slate-500">包含高碳减脂特有的“糖原水分波动修正”与每2周一次代谢回充 (Refeed) 阶梯下降轨迹</p>
+              </div>
+              <div class="flex items-center gap-3 text-xs">
+                <span class="inline-flex items-center gap-1 text-emerald-700 font-bold"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> 预测体重(kg)</span>
+                <span class="inline-flex items-center gap-1 text-amber-600 font-bold"><span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span> 预测体脂率(%)</span>
+              </div>
+            </div>
+
+            <div class="relative h-72">
+              <canvas id="projectionLineChart"></canvas>
+            </div>
+          </div>
+
+          <!-- 3-Phase Roadmap for 3 Months Lose 10kg -->
+          <div class="glass-card rounded-3xl p-4 sm:p-6 space-y-4">
+            <h3 class="text-base font-black text-slate-900">分阶段怎么吃、怎么搭配？（三阶段高碳突破法）</h3>
+            <div id="roadmapStagesContainer" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <!-- Populated dynamically by JS -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer with Watermark & GitHub Ready Info -->
+  <footer class="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-4 border-t border-slate-200/80 text-center sm:flex sm:items-center sm:justify-between text-xs text-slate-500">
+    <div class="flex items-center justify-center gap-2 font-bold text-slate-700">
+      <span class="px-2.5 py-0.5 rounded-full theme-btn-primary text-[11px] font-extrabold">Chris制作</span>
+      <span>High Carb Project · by chris</span>
+    </div>
+    <div class="mt-1 sm:mt-0 text-[11px] text-slate-400 font-medium">
+      支持手机端自适应与单文件直接部署 GitHub Pages · 科学高碳低脂燃脂系统
+    </div>
+  </footer>
+
+  <!-- Mobile Bottom Navigation Bar (Thumb-friendly for phone users) -->
+  <nav class="sm:hidden fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur-xl border-t border-slate-200 shadow-lg grid grid-cols-4 h-14" aria-label="手机底部导航">
+    <button type="button" data-tab="profile" class="main-tab-btn flex flex-col items-center justify-center gap-0.5 text-[11px] font-bold text-emerald-600">
+      <span class="text-base leading-none">📊</span>
+      <span>身体&今日</span>
+    </button>
+    <button type="button" data-tab="meals" class="main-tab-btn flex flex-col items-center justify-center gap-0.5 text-[11px] font-medium text-slate-500">
+      <span class="text-base leading-none">🍱</span>
+      <span>亚洲三餐</span>
+    </button>
+    <button type="button" data-tab="guide" class="main-tab-btn flex flex-col items-center justify-center gap-0.5 text-[11px] font-medium text-slate-500">
+      <span class="text-base leading-none">🚦</span>
+      <span>红黑榜&FAQ</span>
+    </button>
+    <button type="button" data-tab="planner" class="main-tab-btn flex flex-col items-center justify-center gap-0.5 text-[11px] font-medium text-slate-500">
+      <span class="text-base leading-none">🎯</span>
+      <span>周期规划</span>
+    </button>
+  </nav>
+
+  <!-- Toast Notification with Modern Rounded Card -->
+  <div id="toastNotice" class="fixed bottom-16 sm:bottom-5 right-4 sm:right-5 z-50 hidden max-w-sm bg-slate-950/95 backdrop-blur-md text-white px-4 py-3 rounded-2xl shadow-2xl border border-white/20 text-xs font-bold flex items-center gap-2.5" style="animation: modalFadeIn 0.25s ease;">
+    <span id="toastIcon" class="text-base">✅</span>
+    <span id="toastMessage">操作成功</span>
+  </div>
+
+  <script>
+    // ==========================================
+    // 1. APPLICATION STATE
+    // ==========================================
+    const ASIAN_FOOD_ITEMS = [
+      // Carbs (High carb, ultra-low fat)
+      { id: 'rice_cooked', name: '熟白米饭/东北大米饭', category: '主食碳水', unitLabel: '克(熟重)', cal: 116, c: 25.9, p: 2.6, f: 0.3, tags: ['chinese_home', 'cantonese_nanyang', 'japanese_korean', 'convenience'], tip: '训练后快碳首选，迅速补充肌糖原' },
+      { id: 'multigrain_rice', name: '熟糙米/黑米杂粮饭', category: '主食碳水', unitLabel: '克(熟重)', cal: 118, c: 25.2, p: 3.1, f: 0.6, tags: ['chinese_home', 'japanese_korean', 'convenience'], tip: '低GI慢碳，午餐吃饱腹感长达4小时' },
+      { id: 'sweet_potato', name: '蒸红薯/紫薯/铁棍山药', category: '主食碳水', unitLabel: '克(去皮熟重)', cal: 86, c: 20.1, p: 1.6, f: 0.1, tags: ['chinese_home', 'japanese_korean', 'convenience'], tip: '天然零脂肪高钾碳水，帮助排出多余水分' },
+      { id: 'soba_noodles', name: '日式荞麦面/非油炸挂面', category: '主食碳水', unitLabel: '克(干重)', cal: 340, c: 71.0, p: 11.5, f: 1.2, tags: ['chinese_home', 'japanese_korean'], tip: '高膳食纤维与芦丁，拌少许生抽陈醋极佳' },
+      { id: 'rice_noodles', name: '广式瘦肉肠粉(少油)/清汤米线', category: '主食碳水', unitLabel: '克(熟重)', cal: 112, c: 23.5, p: 3.2, f: 0.6, tags: ['cantonese_nanyang', 'chinese_home'], tip: '叮嘱店家“走油/少油”，酱油另碟蘸食' },
+      { id: 'oats_dry', name: '纯燕麦片', category: '主食碳水', unitLabel: '克(干重)', cal: 368, c: 64.0, p: 13.5, f: 6.5, tags: ['chinese_home', 'convenience'], tip: '早餐优质β-葡聚糖来源，切勿选水果烘培麦片' },
+      { id: 'corn_cob', name: '蒸甜玉米/糯玉米(可食部)', category: '主食碳水', unitLabel: '克(熟玉米粒)', cal: 106, c: 22.8, p: 4.0, f: 1.2, tags: ['chinese_home', 'convenience'], tip: '便利店随时可买，一根中号玉米可食部约150g' },
+      { id: 'steamed_bun', name: '全麦馒头/北方白馒头', category: '主食碳水', unitLabel: '克(熟重)', cal: 221, c: 47.0, p: 7.0, f: 1.0, tags: ['chinese_home', 'convenience'], tip: '碳水密度是米饭的近2倍，腿日/推拉日前吃半个状态拉满' },
+      { id: 'banana', name: '香蕉(去皮)', category: '主食碳水', unitLabel: '克(果肉)', cal: 89, c: 22.8, p: 1.1, f: 0.3, tags: ['chinese_home', 'cantonese_nanyang', 'japanese_korean', 'convenience'], tip: '训练前30分钟加餐神器，防掉肌肉' },
+
+      // Proteins (High protein, low fat)
+      { id: 'chicken_breast', name: '滑炒/白切去皮鸡胸肉', category: '优质蛋白', unitLabel: '克(生重)', cal: 118, c: 1.0, p: 24.6, f: 1.9, tags: ['chinese_home', 'cantonese_nanyang', 'convenience'], tip: '用淀粉+生抽抓匀水滑，嫩滑不柴且几乎零油脂' },
+      { id: 'shrimp_meat', name: '白灼基围虾/青虾仁', category: '优质蛋白', unitLabel: '克(去壳重)', cal: 93, c: 0.8, p: 20.6, f: 0.8, tags: ['cantonese_nanyang', 'chinese_home', 'japanese_korean'], tip: '蛋白质极纯、脂肪不足1%，高碳日顶配海鲜蛋白', isSeafood: true },
+      { id: 'lean_beef', name: '五香卤牛腱子/潮汕瘦吊龙', category: '优质蛋白', unitLabel: '克(熟卤重)', cal: 150, c: 1.5, p: 28.5, f: 3.2, tags: ['chinese_home', 'cantonese_nanyang', 'convenience'], tip: '富含肌酸、铁与锌，帮肌肉锁住糖原与力量' },
+      { id: 'steamed_fish', name: '清蒸鲈鱼/龙利鱼柳/鳕鱼', category: '优质蛋白', unitLabel: '克(生净肉)', cal: 105, c: 0.0, p: 19.5, f: 2.6, tags: ['cantonese_nanyang', 'chinese_home', 'japanese_korean'], tip: '易消化高吸收，晚餐搭配米饭肠胃零负担', isSeafood: true },
+      { id: 'egg_whites_whole', name: '水煮全蛋1颗+蛋白2个', category: '优质蛋白', unitLabel: '克(约2.5颗蛋体)', cal: 110, c: 1.2, p: 14.5, f: 5.0, tags: ['chinese_home', 'convenience', 'japanese_korean'], tip: '保留1颗蛋黄摄取卵磷脂，多用鸡蛋白补充纯蛋白' },
+      { id: 'tofu_firm', name: '北豆腐/嫩豆腐/无糖豆浆', category: '优质蛋白', unitLabel: '克(豆腐块)', cal: 82, c: 2.5, p: 8.8, f: 4.2, tags: ['chinese_home', 'japanese_korean'], tip: '植物大豆蛋白+钙质，适合做海鲜或菌菇豆腐汤' },
+      { id: 'pork_tenderloin', name: '猪里脊肉片(瘦肉汤/滑溜)', category: '优质蛋白', unitLabel: '克(生重)', cal: 122, c: 1.0, p: 21.5, f: 3.5, tags: ['chinese_home', 'cantonese_nanyang'], tip: '富含维生素B1（硫胺素），直接加速高碳水代谢燃脂', isPork: true },
+      { id: 'skim_milk', name: '脱脂/低脂牛奶或无糖酸奶', category: '优质蛋白', unitLabel: '毫升(ml)', cal: 38, c: 5.0, p: 3.4, f: 0.4, tags: ['chinese_home', 'convenience'], tip: '高碳日优选脱脂/低脂奶，把宝贵脂肪额度留给正餐', isLactose: true },
+      { id: 'soy_milk_unsweet', name: '高蛋白无糖熟豆浆', category: '优质蛋白', unitLabel: '毫升(ml)', cal: 34, c: 1.8, p: 3.6, f: 1.4, tags: ['chinese_home', 'convenience'], tip: '乳糖不耐受人群的完美替代，温和护胃' },
+
+      // Veggies & Controlled Healthy Fats
+      { id: 'asian_greens', name: '蒜蓉白灼芥蓝/菜心/上海青/菠菜', category: '高纤蔬菜', unitLabel: '克(生重)', cal: 24, c: 4.2, p: 1.8, f: 0.3, tags: ['chinese_home', 'cantonese_nanyang', 'japanese_korean', 'convenience'], tip: '每餐200~250g绿叶菜，延缓血糖峰值' },
+      { id: 'mushroom_veggie', name: '凉拌木耳黄瓜/金针菇/番茄冬瓜', category: '高纤蔬菜', unitLabel: '克(生重)', cal: 22, c: 4.5, p: 1.5, f: 0.2, tags: ['chinese_home', 'japanese_korean'], tip: '菌菇与瓜茄类体积大热量极低，增加胃部充盈感' },
+      { id: 'cooking_oil_spray', name: '喷雾橄榄油/香油/坚果配额', category: '严控好油', unitLabel: '克(纯油脂)', cal: 890, c: 0.0, p: 0.0, f: 99.0, tags: ['chinese_home', 'cantonese_nanyang', 'japanese_korean'], tip: '高碳减脂成败关键：用不粘锅+油壶控油，每餐烹调油≤5g' }
+    ];
+
+    const MEAL_TEMPLATES = {
+      breakfast: [
+        {
+          id: 'bf_1',
+          title: '中式元气燕麦玉米鸡蛋白早餐',
+          cuisine: 'chinese_home',
+          tag: '高纤慢碳 · 温和唤醒胰岛素',
+          carbItem: 'oats_dry',
+          carbSecondary: 'corn_cob',
+          proteinItem: 'egg_whites_whole',
+          veggieName: '圣女果/黄瓜 100g + 无糖豆浆/脱脂奶 200ml',
+          prepNote: '燕麦用热无糖豆浆或脱脂奶冲泡，搭配蒸甜玉米与水煮蛋（1全蛋+2蛋白），高碳低脂饱腹一整上午。'
+        },
+        {
+          id: 'bf_2',
+          title: '广式少油瘦肉肠粉 + 白灼蛋套餐',
+          cuisine: 'cantonese_nanyang',
+          tag: '老广早茶风 · 易消化碳水',
+          carbItem: 'rice_noodles',
+          carbSecondary: 'sweet_potato',
+          proteinItem: 'pork_tenderloin',
+          veggieName: '白灼生菜 150g（豉油另蘸）',
+          prepNote: '点瘦肉/牛肉肠粉时叮嘱“刮薄浆、不淋明油”，加一份瘦肉或水煮蛋白补齐蛋白质。'
+        },
+        {
+          id: 'bf_3',
+          title: '便利店打工人极速紫薯馒头配卤蛋套餐',
+          cuisine: 'convenience',
+          tag: '3分钟搞定 · 控油精准',
+          carbItem: 'steamed_bun',
+          carbSecondary: 'sweet_potato',
+          proteinItem: 'egg_whites_whole',
+          veggieName: '便利店轻食蔬菜杯 + 无糖豆浆/脱脂奶 250ml',
+          prepNote: '避开油条、酥皮面包和肉包（高碳+高脂=增肥炸弹），选蒸紫薯+全麦馒头+卤蛋白。'
+        }
+      ],
+      lunch: [
+        {
+          id: 'lu_1',
+          title: '潮汕卤牛腱配杂粮白米双拼饭',
+          cuisine: 'chinese_home',
+          tag: '高铁高肌酸 · 推拉腿主力供能',
+          carbItem: 'multigrain_rice',
+          carbSecondary: 'rice_cooked',
+          proteinItem: 'lean_beef',
+          veggieName: '蒜蓉水油焖上海青 + 凉拌黑木耳 250g',
+          prepNote: '牛腱子去除可见筋膜肥油切片，米饭足量吃饱，蔬菜采用“水油焖”（2g油+半碗水焖熟）。'
+        },
+        {
+          id: 'lu_2',
+          title: '南洋海南去皮白切鸡胸配香米饭',
+          cuisine: 'cantonese_nanyang',
+          tag: '鲜嫩清爽 · 姜葱提味',
+          carbItem: 'rice_cooked',
+          carbSecondary: 'corn_cob',
+          proteinItem: 'chicken_breast',
+          veggieName: '白灼芥蓝 250g + 冬瓜海带清汤',
+          prepNote: '注意把原本用鸡油炒的鸡油饭换成普通白米饭，鸡肉去皮蘸姜葱蓉或黑酱油，立省25g纯脂肪！'
+        },
+        {
+          id: 'lu_3',
+          title: '日式寿喜风少油瘦牛荞麦面定食',
+          cuisine: 'japanese_korean',
+          tag: '高芦丁慢碳 · 控糖不犯困',
+          carbItem: 'soba_noodles',
+          carbSecondary: 'sweet_potato',
+          proteinItem: 'lean_beef',
+          veggieName: '金针菇 + 娃娃菜 + 魔芋丝 + 北豆腐 250g',
+          prepNote: '用昆布木鱼花汤底配少量生抽代糖，选用瘦牛霖/吊龙代替肥牛卷，吃完下午精力充沛不犯困。'
+        }
+      ],
+      snack: [
+        {
+          id: 'sn_1',
+          title: '练前/练后靶向快碳：香蕉 + 蒸紫薯 + 蛋白饮',
+          cuisine: 'convenience',
+          tag: '靶向快碳 · 把碳水精准送进肌肉',
+          carbItem: 'banana',
+          carbSecondary: 'sweet_potato',
+          proteinItem: 'skim_milk',
+          veggieName: '美式黑咖啡或绿茶 1杯（提升运动燃脂效率）',
+          prepNote: '训练前45分钟吃香蕉+紫薯拉满泵感；练后补充蛋白饮，此时肌肉GLUT4通道全开，碳水优先合成肌糖原而非脂肪！'
+        },
+        {
+          id: 'sn_2',
+          title: '中式温热红薯 + 鸡蛋白加餐组合',
+          cuisine: 'chinese_home',
+          tag: '稳定血糖 · 预防晚餐暴食',
+          carbItem: 'sweet_potato',
+          carbSecondary: 'corn_cob',
+          proteinItem: 'egg_whites_whole',
+          veggieName: '温水或乌龙茶 400ml',
+          prepNote: '下午4点左右补充优质碳水与蛋白，彻底杜绝傍晚饥饿感导致的甜食渴望。'
+        }
+      ],
+      dinner: [
+        {
+          id: 'dn_1',
+          title: '广式白灼鲜虾仁 + 蒸红薯米饭配时蔬',
+          cuisine: 'cantonese_nanyang',
+          tag: '极低脂高蛋白 · 夜间轻盈掉秤',
+          carbItem: 'rice_cooked',
+          carbSecondary: 'sweet_potato',
+          proteinItem: 'shrimp_meat',
+          veggieName: '番茄金针菇豆腐汤 + 蒜蓉生菜 250g',
+          prepNote: '虾仁几乎零脂肪，搭配小米辣柠檬生抽蘸水；晚餐依然保留充足碳水，助眠并维持夜间瘦素(Leptin)水平。'
+        },
+        {
+          id: 'dn_2',
+          title: '清蒸鲈鱼/龙利鱼 + 杂粮米饭家常套餐',
+          cuisine: 'chinese_home',
+          tag: '护肝促排 · 高钾去水肿',
+          carbItem: 'multigrain_rice',
+          carbSecondary: 'sweet_potato',
+          proteinItem: 'steamed_fish',
+          veggieName: '清炒西兰花木耳 250g（少油）',
+          prepNote: '清蒸鱼出锅后只淋蒸鱼豉油与葱花，省去最后一步“泼滚烫热油”，立刻减少150大卡纯油脂。'
+        },
+        {
+          id: 'dn_3',
+          title: '韩式大酱海鲜嫩豆腐锅 + 杂粮饭',
+          cuisine: 'japanese_korean',
+          tag: '暖胃满足 · 秋冬减脂救星',
+          carbItem: 'multigrain_rice',
+          carbSecondary: 'corn_cob',
+          proteinItem: 'shrimp_meat',
+          veggieName: '嫩豆腐100g + 西葫芦 + 豆芽 + 菌菇 250g',
+          prepNote: '用韩式大酱一小勺煮虾仁或瘦牛肉与蔬菜豆腐，鲜辣开胃，高体积热汤极大提升晚餐幸福感。'
+        }
+      ]
+    };
+
+    const HIGH_CARB_FAQS = [
+      {
+        q: '1. 为什么吃这么多白米饭和碳水还能减脂？不会变成肥肉吗？',
+        a: '脂肪的合成需要两个条件同时满足：“热量盈余”或“高胰岛素 + 血液中有大量游离脂肪酸”。天然碳水（米饭、红薯、杂粮、米粉）本身脂肪含量不到 1%。当我们处于热量缺口且把全天油脂严控在 15%~20% 以内时，吃进去的碳水会优先填满你的骨骼肌糖原（1kg肌肉可储存约14~18g糖原）和肝糖原，并维持高水平的甲状腺素 T3 和瘦素，让你像一台火力全开的锅炉一样持续燃脂！'
+      },
+      {
+        q: '2. 为什么腿日（练腿）、拉日（练背）、推日（练胸肩）的碳水要区别对待？',
+        a: '臀腿肌群占全身骨骼肌总量的 50% 以上！练腿日（深蹲、硬拉、腿举）对肌糖原的掏空程度远超手臂或肩部训练。High carb Peoject 在【腿日】会自动为您上调约 10%~12% 碳水并压低脂肪，帮您在练前拉满力量、练后迅速超量恢复；而在【推日】采用标准高碳，在【休息日】则自动回落碳水，真正做到“按肌肉需求精准喂碳水”。'
+      },
+      {
+        q: '3. 高碳减脂最怕踩的坑是什么？为什么绝对不能碰“糖油混合物”？',
+        a: '高碳减脂唯一的铁律就是“高碳必低脂”！如果你吃了高碳水（胰岛素升高打开细胞大门），同时又吃了红烧肉、肥牛、油条、炸鸡、沙拉酱或重油炒菜，血液里的高浓度脂肪酸就会被胰岛素直接塞进脂肪细胞。所以在家做饭建议用不粘锅+喷油壶，外食准备一碗热水涮掉菜表面的浮油。'
+      },
+      {
+        q: '4. 刚从低碳/节食切换到高碳减脂，前 3 天体重涨了 0.8kg 是长胖了吗？',
+        a: '完全不是长胖，而是肌肉重新充盈了糖原和水分！每 1 克肌糖原在肌肉内储存时会绑定约 3 克水分子（锁在肌肉细胞内，会让肌肉看起来更饱满紧致，而不是皮下水肿）。适应 4~7 天后，随着基础代谢率回升，纯脂肪会开始以每周 0.5~1.0kg 的速度稳定下降。'
+      },
+      {
+        q: '5. 睡眠时间/睡眠质量如何影响高碳减脂？晚上吃米饭会发胖吗？',
+        a: '睡眠时间少于 6.5 小时或浅眠多梦会导致瘦素下降、饥饿素飙升。High carb Peoject 会根据您的睡眠时间与质量自动微调晚餐慢碳比例：在晚餐保留适量红薯或杂粮米饭，能够温和促进色氨酸进入大脑合成血清素与褪黑素，让您睡得更沉、夜间生长激素分泌更旺盛，躺着也能高效燃脂！'
+      },
+      {
+        q: '6. 上班族天天点外卖/吃食堂，怎么实操这套亚洲高碳配餐？',
+        a: '记住 3 句口诀：① 主食选纯白米饭、杂粮饭、蒸玉米红薯、清汤米线或少油肠粉（千万别点炒饭、炒面、黄焖鸡汤泡饭）；② 蛋白质选卤牛肉、白切鸡（去皮）、清蒸鱼、白灼虾、茶树菇炒瘦肉；③ 准备一杯温水，把食堂炒青菜涮一下再吃，立刻洗掉 10~15 克劣质烹调油！'
+      },
+      {
+        q: '7. 减脂第 4~6 周遇到平台期体重不动了，怎么用“Refeed 代谢回充日”突破？',
+        a: '长期处于热量缺口会让身体瘦素（Leptin）下降，大脑以为闹饥荒而主动降低代谢。每 10~14 天点击本软件顶部的【🍚 代谢回充日 Refeed】，当天把热量吃到总消耗 TDEE（不制造缺口），且把碳水拉高到 60%~65%、脂肪压到极低。这相当于给大脑发信号“粮草充足”，第二天起体重往往会迎来新一轮阶梯式下跌！'
+      }
+    ];
+
+    // ==========================================
+    // 2. APPLICATION STATE
+    // ==========================================
+    const defaultState = {
+      gender: 'male',
+      aestheticTheme: 'cyber_male', // 'cyber_male' or 'aurora_female'
+      age: 28,
+      height: 172,
+      weight: 75.0,
+      bodyFat: 24.0,
+      manualMuscle: false,
+      muscleMass: 31.4,
+      manualBmr: false,
+      customBmr: 1601,
+      sleepHours: 7.5,
+      sleepQuality: 'deep', // 'deep', 'normal', 'light'
+      trainingStyle: 'hypertrophy', // 'hypertrophy', 'glute_shaping', 'hiit_crossfit', 'endurance', 'home_novice'
+      workoutSplit: 'leg', // 'leg', 'pull', 'push', 'full_hiit', 'rest_cardio'
+      workoutIntensity: 'moderate', // 'light', 'moderate', 'heavy'
+      noLactose: false,
+      noSeafood: false,
+      noPork: false,
+      trainingFreq: 4, // 0, 2, 4, 5, 7
+      dayMode: 'training', // 'training', 'rest', 'refeed'
+      carbStrategy: 'standard_hc', // 'standard_hc' (55/27/18), 'extreme_hc' (60/25/15), 'gentle_hc' (50/30/20)
+      cuisinePref: 'all',
+      selectedMealIndices: { breakfast: 0, lunch: 0, snack: 0, dinner: 0 },
+      targetWeightLoss: 10.0,
+      targetWeeks: 12,
+      dietSharePct: 65,
+      syncedGoalDeficit: null,
+      openFaqIndices: [0, 1],
+      introModalDismissed: false
+    };
+
+    let state = { ...defaultState };
+
+    try {
+      const saved = localStorage.getItem('high_carb_project_v4');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        state = { ...defaultState, ...parsed };
+      }
+    } catch (e) {
+      // Ignore storage error in restricted sandbox
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem('high_carb_project_v4', JSON.stringify(state));
+      } catch (e) {
+        // Ignore storage error
+      }
+    }
+
+    // ==========================================
+    // 2. NUTRITION & METABOLIC CALCULATION ENGINE
+    // ==========================================
+    const FREQ_MULTIPLIERS = {
+      0: { mult: 1.20, label: '久坐少动 (×1.20)' },
+      2: { mult: 1.35, label: '每周1-2练 (×1.35)' },
+      4: { mult: 1.48, label: '每周3-4练 (×1.48)' },
+      5: { mult: 1.62, label: '每周5-6练 (×1.62)' },
+      7: { mult: 1.75, label: '每日高强训练 (×1.75)' }
+    };
+
+    const SPLIT_CONFIG = {
+      leg: { name: '🦵 腿日/臀腿', calBonus: 90, carbShift: +0.04, fatShift: -0.02, badge: '腿日碳水加成 +12%' },
+      pull: { name: '🏋️ 拉日(背/二头)', calBonus: 45, carbShift: +0.02, fatShift: -0.01, badge: '背部大肌群 +6%碳水' },
+      push: { name: '💪 推日(胸/肩/三头)', calBonus: 0, carbShift: 0, fatShift: 0, badge: '推日标准高碳配比' },
+      full_hiit: { name: '🔥 全身/HIIT团课', calBonus: 65, carbShift: +0.03, fatShift: -0.01, badge: '高心率糖酵解 +8%碳水' },
+      rest_cardio: { name: '🧘 休息/纯有氧', calBonus: -110, carbShift: -0.06, fatShift: +0.03, badge: '休息有氧日 适度控碳' }
+    };
+
+    const INTENSITY_CONFIG = {
+      light: { name: '轻度恢复', calAdj: -60 },
+      moderate: { name: '标准充血', calAdj: 0 },
+      heavy: { name: '力竭冲刺', calAdj: +85 }
+    };
+
+    function computeMetrics() {
+      const w = Math.max(35, Math.min(200, Number(state.weight) || 75));
+      const h = Math.max(130, Math.min(220, Number(state.height) || 172));
+      const age = Math.max(16, Math.min(80, Number(state.age) || 28));
+      const bf = Math.max(6, Math.min(55, Number(state.bodyFat) || 24));
+      const sleepHours = Math.max(4, Math.min(11, Number(state.sleepHours) || 7.5));
+
+      const fatMass = w * (bf / 100);
+      const lbm = w - fatMass;
+
+      const autoSmm = state.gender === 'male' ? +(lbm * 0.55).toFixed(1) : +(lbm * 0.51).toFixed(1);
+      const smm = state.manualMuscle ? Math.max(12, Math.min(90, Number(state.muscleMass) || autoSmm)) : autoSmm;
+      const muscleToFatRatio = +(smm / Math.max(1, fatMass)).toFixed(2);
+      const glycogenCapacity = Math.round(smm * 14);
+
+      const katchBmr = 370 + 21.6 * lbm;
+      const mifflinBmr = 10 * w + 6.25 * h - 5 * age + (state.gender === 'male' ? 5 : -161);
+      const muscleDelta = smm - autoSmm;
+      const calculatedBmr = Math.round(katchBmr * 0.7 + mifflinBmr * 0.3 + muscleDelta * 15);
+      const bmr = state.manualBmr ? Math.max(800, Math.min(3500, Number(state.customBmr) || calculatedBmr)) : calculatedBmr;
+
+      const freqInfo = FREQ_MULTIPLIERS[state.trainingFreq] || FREQ_MULTIPLIERS[4];
+
+      let sleepMetabolicAdj = 0;
+      if (sleepHours >= 7.5 && state.sleepQuality === 'deep') {
+        sleepMetabolicAdj = +35;
+      } else if (sleepHours < 6.5 || state.sleepQuality === 'light') {
+        sleepMetabolicAdj = -40;
+      }
+
+      const splitInfo = SPLIT_CONFIG[state.workoutSplit] || SPLIT_CONFIG.leg;
+      const intensityInfo = INTENSITY_CONFIG[state.workoutIntensity] || INTENSITY_CONFIG.moderate;
+
+      const baseTdee = Math.round(bmr * freqInfo.mult + sleepMetabolicAdj);
+      const todayTdee = state.dayMode === 'rest'
+        ? baseTdee - 100
+        : baseTdee + splitInfo.calBonus + intensityInfo.calAdj;
+
+      let baseDeficit = state.syncedGoalDeficit !== null ? state.syncedGoalDeficit : Math.round(baseTdee * 0.23);
+      let dayCalorieTarget = todayTdee - baseDeficit;
+
+      if (state.dayMode === 'training') {
+        dayCalorieTarget = Math.max(bmr - 50, todayTdee - baseDeficit);
+      } else if (state.dayMode === 'rest') {
+        dayCalorieTarget = Math.max(bmr - 100, todayTdee - baseDeficit - 80);
+      } else if (state.dayMode === 'refeed') {
+        dayCalorieTarget = todayTdee;
+      }
+
+      dayCalorieTarget = Math.round(dayCalorieTarget);
+      const actualDeficit = todayTdee - dayCalorieTarget;
+
+      let carbRatio = 0.55, proRatio = 0.27, fatRatio = 0.18;
+      if (state.carbStrategy === 'extreme_hc') {
+        carbRatio = 0.60; proRatio = 0.25; fatRatio = 0.15;
+      } else if (state.carbStrategy === 'gentle_hc') {
+        carbRatio = 0.50; proRatio = 0.30; fatRatio = 0.20;
+      }
+
+      if (state.dayMode === 'training') {
+        carbRatio += splitInfo.carbShift;
+        fatRatio += splitInfo.fatShift;
+      } else if (state.dayMode === 'rest') {
+        carbRatio -= 0.07;
+        proRatio += 0.04;
+        fatRatio += 0.03;
+      } else if (state.dayMode === 'refeed') {
+        carbRatio = 0.64;
+        proRatio = 0.23;
+        fatRatio = 0.13;
+      }
+
+      let proteinGrams = Math.round((dayCalorieTarget * proRatio) / 4);
+      const minProteinByMuscle = Math.round(lbm * 1.9 + Math.max(0, muscleDelta) * 1.8);
+      const maxProteinCap = Math.round(lbm * 2.6);
+      proteinGrams = Math.max(minProteinByMuscle, Math.min(maxProteinCap, proteinGrams));
+
+      let fatGrams = Math.round((dayCalorieTarget * fatRatio) / 9);
+      const minFatFloor = state.gender === 'female' ? 30 : 28;
+      fatGrams = Math.max(minFatFloor, fatGrams);
+
+      const remainingCalForCarbs = Math.max(400, dayCalorieTarget - (proteinGrams * 4) - (fatGrams * 9));
+      const carbGrams = Math.round(remainingCalForCarbs / 4);
+
+      const finalCalories = carbGrams * 4 + proteinGrams * 4 + fatGrams * 9;
+      const finalCarbPct = Math.round(((carbGrams * 4) / finalCalories) * 100);
+      const finalProPct = Math.round(((proteinGrams * 4) / finalCalories) * 100);
+      const finalFatPct = Math.max(10, 100 - finalCarbPct - finalProPct);
+
+      const needEveningSleepCarbs = sleepHours < 6.5 || state.sleepQuality === 'light';
+      const snackCarbShare = (state.dayMode === 'training' && (state.workoutSplit === 'leg' || state.workoutSplit === 'pull')) ? 0.22 : 0.18;
+      const lunchCarbShare = needEveningSleepCarbs ? 0.33 : 0.35;
+      const bfCarbShare = 0.23;
+
+      const mealSplits = [
+        {
+          key: 'breakfast',
+          name: '🌅 早餐 (唤醒代谢)',
+          cal: Math.round(finalCalories * 0.25),
+          c: Math.round(carbGrams * bfCarbShare),
+          p: Math.round(proteinGrams * 0.25),
+          f: Math.round(fatGrams * 0.28)
+        },
+        {
+          key: 'lunch',
+          name: '☀️ 午餐 (主力供能)',
+          cal: Math.round(finalCalories * 0.35),
+          c: Math.round(carbGrams * lunchCarbShare),
+          p: Math.round(proteinGrams * 0.34),
+          f: Math.round(fatGrams * 0.34)
+        },
+        {
+          key: 'snack',
+          name: state.dayMode === 'training' ? `⚡ 练前/练后加餐 (${splitInfo.name}靶向充碳)` : '🍵 下午加餐 (稳糖抗饿)',
+          cal: Math.round(finalCalories * 0.16),
+          c: Math.round(carbGrams * snackCarbShare),
+          p: Math.round(proteinGrams * 0.15),
+          f: Math.round(fatGrams * 0.10)
+        },
+        {
+          key: 'dinner',
+          name: needEveningSleepCarbs ? '🌙 晚餐 (助眠深睡慢碳配比)' : '🌙 晚餐 (修复控脂)',
+          cal: Math.round(finalCalories * 0.24),
+          c: Math.max(20, carbGrams - Math.round(carbGrams * bfCarbShare) - Math.round(carbGrams * lunchCarbShare) - Math.round(carbGrams * snackCarbShare)),
+          p: Math.max(15, proteinGrams - Math.round(proteinGrams * 0.25) - Math.round(proteinGrams * 0.34) - Math.round(proteinGrams * 0.15)),
+          f: Math.max(5, fatGrams - Math.round(fatGrams * 0.28) - Math.round(fatGrams * 0.34) - Math.round(fatGrams * 0.10))
+        }
+      ];
+
+      const targetLoss = Math.max(1, Math.min(50, Number(state.targetWeightLoss) || 10));
+      const targetWeeks = Math.max(2, Math.min(52, Number(state.targetWeeks) || 12));
+      const totalDays = targetWeeks * 7;
+      const totalKcalDeficit = Math.round(targetLoss * 7700);
+      const dailyTotalDeficitNeeded = Math.round(totalKcalDeficit / totalDays);
+      const weeklyLossRate = +(targetLoss / targetWeeks).toFixed(2);
+      const weeklyLossPct = +((weeklyLossRate / w) * 100).toFixed(2);
+
+      const dietShare = (Number(state.dietSharePct) || 65) / 100;
+      const dailyDietDeficit = Math.round(dailyTotalDeficitNeeded * dietShare);
+      const dailyCardioDeficit = dailyTotalDeficitNeeded - dailyDietDeficit;
+      const plannedDietIntake = Math.max(bmr - 150, baseTdee - dailyDietDeficit);
+
+      return {
+        w, h, age, bf, sleepHours, fatMass, lbm, smm, autoSmm, muscleToFatRatio, glycogenCapacity,
+        calculatedBmr, bmr, tdee: todayTdee, baseTdee,
+        freqInfo, splitInfo, intensityInfo,
+        finalCalories, actualDeficit,
+        carbGrams, proteinGrams, fatGrams,
+        finalCarbPct, finalProPct, finalFatPct,
+        mealSplits,
+        goal: {
+          targetLoss,
+          targetWeeks,
+          totalDays,
+          totalKcalDeficit,
+          dailyTotalDeficitNeeded,
+          weeklyLossRate,
+          weeklyLossPct,
+          dailyDietDeficit,
+          dailyCardioDeficit,
+          plannedDietIntake
+        }
+      };
+    }
+
+    // ==========================================
+    // 3. CHARTS INITIALIZATION & UPDATES
+    // ==========================================
+    let macroChartInstance = null;
+    let projectionChartInstance = null;
+
+    function updateMacroChart(metrics) {
+      const ctx = document.getElementById('macroDoughnutChart');
+      if (!ctx) return;
+
+      const isFemaleTheme = state.aestheticTheme === 'aurora_female';
+      const carbColor = isFemaleTheme ? '#f43f5e' : '#10b981';
+      const proColor = isFemaleTheme ? '#a855f7' : '#0ea5e9';
+      const fatColor = '#f59e0b';
+
+      const dataVals = [
+        metrics.carbGrams * 4,
+        metrics.proteinGrams * 4,
+        metrics.fatGrams * 9
+      ];
+
+      if (!macroChartInstance) {
+        macroChartInstance = new Chart(ctx, {
+          type: 'doughnut',
+          data: {
+            labels: [
+              `碳水 ${metrics.carbGrams}g (${metrics.finalCarbPct}%)`,
+              `蛋白质 ${metrics.proteinGrams}g (${metrics.finalProPct}%)`,
+              `脂肪 ${metrics.fatGrams}g (${metrics.finalFatPct}%)`
+            ],
+            datasets: [{
+              data: dataVals,
+              backgroundColor: [carbColor, proColor, fatColor],
+              borderWidth: 2,
+              borderColor: '#ffffff',
+              hoverOffset: 6
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '66%',
+            plugins: {
+              legend: {
+                position: 'right',
+                labels: {
+                  font: { family: 'Plus Jakarta Sans, Inter, sans-serif', size: 12, weight: '700' },
+                  color: '#334155',
+                  padding: 14,
+                  usePointStyle: true
+                }
+              },
+              tooltip: {
+                callbacks: {
+                  label: function(context) {
+                    return ` ${context.label}: ${context.raw} kcal`;
+                  }
+                }
+              }
+            }
+          }
+        });
+      } else {
+        macroChartInstance.data.labels = [
+          `碳水 ${metrics.carbGrams}g (${metrics.finalCarbPct}%)`,
+          `蛋白质 ${metrics.proteinGrams}g (${metrics.finalProPct}%)`,
+          `脂肪 ${metrics.fatGrams}g (${metrics.finalFatPct}%)`
+        ];
+        macroChartInstance.data.datasets[0].data = dataVals;
+        macroChartInstance.data.datasets[0].backgroundColor = [carbColor, proColor, fatColor];
+        macroChartInstance.update();
+      }
+    }
+
+    function updateProjectionChart(metrics) {
+      const ctx = document.getElementById('projectionLineChart');
+      if (!ctx) return;
+
+      const weeks = metrics.goal.targetWeeks;
+      const labels = [];
+      const weightSeries = [];
+      const bfSeries = [];
+
+      const startW = metrics.w;
+      const startFatMass = metrics.fatMass;
+      const weeklyLoss = metrics.goal.weeklyLossRate;
+
+      for (let i = 0; i <= weeks; i++) {
+        labels.push(i === 0 ? '起点' : `第${i}周`);
+        const rawLoss = weeklyLoss * i;
+        const refeedBump = (i > 0 && i < weeks && i % 4 === 0) ? 0.25 : 0;
+        const currentW = +(Math.max(38, startW - rawLoss + refeedBump)).toFixed(1);
+        const fatLost = rawLoss * 0.90;
+        const currentFatMass = Math.max(3, startFatMass - fatLost);
+        const currentBf = +((currentFatMass / currentW) * 100).toFixed(1);
+
+        weightSeries.push(currentW);
+        bfSeries.push(currentBf);
+      }
+
+      const isFemaleTheme = state.aestheticTheme === 'aurora_female';
+      const linePrimary = isFemaleTheme ? '#f43f5e' : '#10b981';
+      const fillPrimary = isFemaleTheme ? 'rgba(244, 63, 94, 0.12)' : 'rgba(16, 185, 129, 0.12)';
+
+      if (!projectionChartInstance) {
+        projectionChartInstance = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels,
+            datasets: [
+              {
+                label: '预测体重 (kg)',
+                data: weightSeries,
+                borderColor: linePrimary,
+                backgroundColor: fillPrimary,
+                borderWidth: 3,
+                fill: true,
+                tension: 0.35,
+                yAxisID: 'yWeight'
+              },
+              {
+                label: '预测体脂率 (%)',
+                data: bfSeries,
+                borderColor: '#f59e0b',
+                backgroundColor: 'rgba(245, 158, 11, 0.08)',
+                borderDash: [5, 4],
+                borderWidth: 2.5,
+                fill: false,
+                tension: 0.35,
+                yAxisID: 'yBf'
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            scales: {
+              yWeight: {
+                type: 'linear',
+                position: 'left',
+                title: { display: true, text: '体重 (kg)', color: '#059669', font: { size: 11, weight: 'bold' } },
+                grid: { color: '#f1f5f9' }
+              },
+              yBf: {
+                type: 'linear',
+                position: 'right',
+                title: { display: true, text: '体脂率 (%)', color: '#d97706', font: { size: 11, weight: 'bold' } },
+                grid: { drawOnChartArea: false }
+              }
+            },
+            plugins: {
+              legend: { display: false }
+            }
+          }
+        });
+      } else {
+        projectionChartInstance.data.labels = labels;
+        projectionChartInstance.data.datasets[0].data = weightSeries;
+        projectionChartInstance.data.datasets[0].borderColor = linePrimary;
+        projectionChartInstance.data.datasets[0].backgroundColor = fillPrimary;
+        projectionChartInstance.data.datasets[1].data = bfSeries;
+        projectionChartInstance.update();
+      }
+    }
+
+    // ==========================================
+    // 4. DOM RENDERING FUNCTIONS
+    // ==========================================
+    function showToast(msg, icon = '✅') {
+      const toast = document.getElementById('toastNotice');
+      document.getElementById('toastIcon').textContent = icon;
+      document.getElementById('toastMessage').textContent = msg;
+      toast.classList.remove('hidden');
+      clearTimeout(window.__toastTimer);
+      window.__toastTimer = setTimeout(() => {
+        toast.classList.add('hidden');
+      }, 2800);
+    }
+
+    function applyAestheticThemeUI() {
+      const isFemale = state.aestheticTheme === 'aurora_female';
+      document.body.classList.toggle('theme-female', isFemale);
+
+      const tag = document.getElementById('aestheticModeTag');
+      const btnText = document.getElementById('aestheticBtnText');
+      const orb1 = document.getElementById('orbPrimary');
+      const orb2 = document.getElementById('orbSecondary');
+
+      if (isFemale) {
+        tag.textContent = '🌸 极光柔粉风 (女生高定塑形主题)';
+        tag.className = 'hidden md:inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-pink-950 text-pink-200 border border-pink-700';
+        btnText.textContent = '当前：极光柔粉风';
+        orb1.className = 'aurora-orb absolute -top-16 -left-16 w-64 h-64 rounded-full bg-pink-500/30 blur-3xl pointer-events-none';
+        orb2.className = 'aurora-orb absolute -bottom-20 right-10 w-72 h-72 rounded-full bg-purple-500/25 blur-3xl pointer-events-none';
+      } else {
+        tag.textContent = '⚡ 赛博机能风 (男生硬核刷脂主题)';
+        tag.className = 'hidden md:inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-900 text-emerald-300 border border-slate-700';
+        btnText.textContent = '当前：赛博电光风';
+        orb1.className = 'aurora-orb absolute -top-16 -left-16 w-64 h-64 rounded-full bg-emerald-500/25 blur-3xl pointer-events-none';
+        orb2.className = 'aurora-orb absolute -bottom-20 right-10 w-72 h-72 rounded-full bg-cyan-500/20 blur-3xl pointer-events-none';
+      }
+    }
+
+    function getFoodById(id) {
+      let targetId = id;
+      if (state.noLactose && targetId === 'skim_milk') targetId = 'soy_milk_unsweet';
+      if (state.noSeafood && (targetId === 'shrimp_meat' || targetId === 'steamed_fish')) targetId = 'chicken_breast';
+      if (state.noPork && targetId === 'pork_tenderloin') targetId = 'lean_beef';
+      return ASIAN_FOOD_ITEMS.find(item => item.id === targetId) || ASIAN_FOOD_ITEMS[0];
+    }
+
+    function renderAll() {
+      applyAestheticThemeUI();
+      const m = computeMetrics();
+
+      const musInput = document.getElementById('inputMuscleMass');
+      const musSlider = document.getElementById('sliderMuscleMass');
+      if (!state.manualMuscle) {
+        state.muscleMass = m.autoSmm;
+        if (musInput && document.activeElement !== musInput) musInput.value = m.autoSmm;
+        if (musSlider && document.activeElement !== musSlider) musSlider.value = m.autoSmm;
+      }
+      if (!state.manualBmr) {
+        state.customBmr = m.calculatedBmr;
+        const bmrInput = document.getElementById('inputCustomBmr');
+        if (bmrInput && document.activeElement !== bmrInput) bmrInput.value = m.calculatedBmr;
+      }
+
+      // 1. Top Banner Updates
+      const modeNames = {
+        training: '⚡ 今日模式：训练日（高碳冲刺·燃脂护肌）',
+        rest: '🧘 今日模式：休息日（适中碳水·平稳胰岛素）',
+        refeed: '🍚 今日模式：代谢回充日 Refeed（拉满瘦素·突破平台期）'
+      };
+      document.getElementById('liveModeBadge').textContent = modeNames[state.dayMode] || modeNames.training;
+      document.getElementById('liveSplitBadge').textContent =
+        state.dayMode === 'rest'
+          ? '🧘 今日休息恢复'
+          : `${m.splitInfo.name} · ${m.intensityInfo.name}`;
+
+      document.getElementById('bannerTargetCalories').textContent = m.finalCalories.toLocaleString();
+      document.getElementById('bannerFormulaSummary').textContent =
+        `已根据您的体重 ${m.w.toFixed(1)}kg、体脂率 ${m.bf.toFixed(1)}%、骨骼肌 ${m.smm.toFixed(1)}kg、睡眠 ${m.sleepHours}h 及【${m.splitInfo.name}】动态锁定。`;
+
+      document.getElementById('bannerDeficitTag').textContent =
+        m.actualDeficit >= 0 ? `缺口 -${m.actualDeficit} kcal` : `盈余 +${Math.abs(m.actualDeficit)} kcal`;
+      document.getElementById('cardCalorieVal').textContent = m.finalCalories.toLocaleString();
+      document.getElementById('cardBmrVal').textContent = `${m.bmr.toLocaleString()} kcal`;
+      document.getElementById('cardTdeeVal').textContent = `${m.tdee.toLocaleString()} kcal`;
+
+      document.getElementById('cardCarbPct').textContent = `${m.finalCarbPct}%`;
+      document.getElementById('cardCarbGrams').textContent = m.carbGrams;
+      document.getElementById('barCarbPct').style.width = `${Math.min(100, m.finalCarbPct)}%`;
+      document.getElementById('cardCarbPerKg').textContent = `约 ${(m.carbGrams / m.w).toFixed(1)} g/kg 体重`;
+      document.getElementById('cardCarbSplitHint').textContent = `${m.splitInfo.badge}`;
+
+      document.getElementById('cardProteinPct').textContent = `${m.finalProPct}%`;
+      document.getElementById('cardProteinGrams').textContent = m.proteinGrams;
+      document.getElementById('barProPct').style.width = `${Math.min(100, m.finalProPct * 2)}%`;
+      document.getElementById('cardProteinPerLbm').textContent = `约 ${(m.proteinGrams / m.lbm).toFixed(1)} g/kg 去脂体重`;
+
+      document.getElementById('cardFatPct').textContent = `${m.finalFatPct}%`;
+      document.getElementById('cardFatGrams').textContent = m.fatGrams;
+      document.getElementById('barFatPct').style.width = `${Math.min(100, m.finalFatPct * 2.5)}%`;
+      document.getElementById('cardFatPerKg').textContent = `约 ${(m.fatGrams / m.w).toFixed(2)} g/kg 体重`;
+
+      // Highlight active dayMode button
+      document.querySelectorAll('.day-mode-btn').forEach(btn => {
+        const isActive = btn.dataset.daymode === state.dayMode;
+        btn.className = isActive
+          ? 'day-mode-btn tactile-btn px-3.5 py-2 rounded-xl text-xs font-bold theme-btn-primary shadow-md transition'
+          : 'day-mode-btn tactile-btn px-3.5 py-2 rounded-xl text-xs font-semibold bg-white/10 text-slate-200 hover:bg-white/20 border border-white/10 transition';
+      });
+
+      // Highlight Gender buttons
+      const isMale = state.gender === 'male';
+      document.getElementById('btnGenderMale').className = isMale
+        ? 'tactile-btn py-2.5 px-3 rounded-2xl border-2 text-sm font-bold transition bg-emerald-50 border-emerald-500 text-emerald-900 flex items-center justify-center gap-1.5 shadow-sm'
+        : 'tactile-btn py-2.5 px-3 rounded-2xl border text-sm font-bold transition bg-white border-slate-200 text-slate-600 hover:bg-slate-50 flex items-center justify-center gap-1.5';
+      document.getElementById('btnGenderFemale').className = !isMale
+        ? 'tactile-btn py-2.5 px-3 rounded-2xl border-2 text-sm font-bold transition bg-pink-50 border-pink-500 text-pink-900 flex items-center justify-center gap-1.5 shadow-sm'
+        : 'tactile-btn py-2.5 px-3 rounded-2xl border text-sm font-bold transition bg-white border-slate-200 text-slate-600 hover:bg-pink-50/40 flex items-center justify-center gap-1.5';
+
+      // Body fat badge
+      const bfBadge = document.getElementById('bfCategoryBadge');
+      let bfCat = '匀称标准';
+      let bfClass = 'ml-2 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800';
+      const highThresh = isMale ? 22 : 29;
+      const lowThresh = isMale ? 13 : 20;
+      if (m.bf >= highThresh) {
+        bfCat = m.bf >= (highThresh + 6) ? '高体脂·重点减脂期' : '体脂偏高·高碳刷脂期';
+        bfClass = 'ml-2 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-100 text-amber-800';
+      } else if (m.bf <= lowThresh) {
+        bfCat = '精瘦线条期';
+        bfClass = 'ml-2 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-sky-100 text-sky-800';
+      }
+      bfBadge.textContent = bfCat;
+      bfBadge.className = bfClass;
+
+      // Muscle Grade Badge
+      const musRatio = (m.smm / m.w) * 100;
+      const musGradeEl = document.getElementById('muscleGradeBadge');
+      const stdMusPct = isMale ? 40 : 33;
+      if (musRatio >= stdMusPct + 4) {
+        musGradeEl.textContent = '💪 骨骼肌发达 (天然高代谢锅炉)';
+        musGradeEl.className = 'px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800';
+      } else if (musRatio >= stdMusPct - 3) {
+        musGradeEl.textContent = '✨ 标准骨骼肌量';
+        musGradeEl.className = 'px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-sky-100 text-sky-800';
+      } else {
+        musGradeEl.textContent = '🌱 肌肉量偏弱 (需重点补蛋白护肌)';
+        musGradeEl.className = 'px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-100 text-amber-800';
+      }
+
+      document.getElementById('muscleHintText').textContent = state.manualMuscle
+        ? `当前使用实测骨骼肌 (${m.smm.toFixed(1)}kg)`
+        : `自动按去脂体重 (${m.lbm.toFixed(1)}kg) 推算骨骼肌`;
+      document.getElementById('muscleMetabolicImpact').textContent =
+        `肌脂比 ${m.muscleToFatRatio} · 肌肉糖原仓容量约 ${m.glycogenCapacity}g`;
+
+      document.getElementById('bmrHintText').textContent = state.manualBmr
+        ? `当前使用您手动锁定的代谢值`
+        : `Katch-McArdle 去脂体重公式 + 骨骼肌动态修正`;
+
+      // Sleep Recovery Badge
+      const sleepBadge = document.getElementById('sleepRecoveryBadge');
+      if (m.sleepHours >= 7.5 && state.sleepQuality === 'deep') {
+        sleepBadge.textContent = `睡眠 ${m.sleepHours}h · 深度恢复满分`;
+        sleepBadge.className = 'text-[11px] px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold';
+      } else if (m.sleepHours < 6.5 || state.sleepQuality === 'light') {
+        sleepBadge.textContent = `睡眠 ${m.sleepHours}h · 已开启晚餐助眠慢碳`;
+        sleepBadge.className = 'text-[11px] px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 font-bold';
+      } else {
+        sleepBadge.textContent = `睡眠 ${m.sleepHours}h · 恢复状态平稳`;
+        sleepBadge.className = 'text-[11px] px-2.5 py-0.5 rounded-full bg-indigo-100 text-indigo-800 font-bold';
+      }
+
+      document.getElementById('splitCarbBonusBadge').textContent = m.splitInfo.badge;
+      document.getElementById('trainingMultiplierLabel').textContent = m.freqInfo.label;
+
+      // Highlight Split buttons
+      document.querySelectorAll('.split-btn').forEach(btn => {
+        const active = btn.dataset.split === state.workoutSplit;
+        const spanClass = btn.dataset.split === 'rest_cardio' ? 'col-span-2 sm:col-span-1 ' : '';
+        btn.className = active
+          ? `${spanClass}split-btn tactile-btn p-2.5 rounded-2xl border-2 border-emerald-500 bg-emerald-50 text-left transition shadow-sm`
+          : `${spanClass}split-btn tactile-btn p-2.5 rounded-2xl border border-slate-200 bg-white text-left hover:bg-slate-50 transition`;
+      });
+
+      // Highlight Intensity buttons
+      document.querySelectorAll('.intensity-btn').forEach(btn => {
+        const active = btn.dataset.intensity === state.workoutIntensity;
+        btn.className = active
+          ? 'intensity-btn tactile-btn py-2 px-2 rounded-xl border-2 border-emerald-500 bg-emerald-50 text-center text-xs font-bold text-emerald-900 transition shadow-sm'
+          : 'intensity-btn tactile-btn py-2 px-2 rounded-xl border border-slate-200 bg-white text-center text-xs font-semibold text-slate-600 hover:bg-slate-50 transition';
+      });
+
+      // Highlight Training Freq buttons
+      document.querySelectorAll('.freq-btn').forEach(btn => {
+        const active = Number(btn.dataset.freq) === Number(state.trainingFreq);
+        btn.className = active
+          ? 'freq-btn tactile-btn py-1.5 px-1 rounded-xl border-2 border-emerald-500 bg-emerald-50 text-center transition shadow-sm'
+          : 'freq-btn tactile-btn py-1.5 px-1 rounded-xl border border-slate-200 bg-white text-center hover:bg-slate-50 transition';
+      });
+
+      // Highlight Carb Strategy buttons
+      document.querySelectorAll('.strategy-btn').forEach(btn => {
+        const active = btn.dataset.strategy === state.carbStrategy;
+        btn.className = active
+          ? 'strategy-btn tactile-btn p-3 rounded-2xl border-2 border-emerald-500 bg-emerald-50/80 text-left transition shadow-sm'
+          : 'strategy-btn tactile-btn p-3 rounded-2xl border border-slate-200 bg-white text-left hover:bg-slate-50 transition';
+      });
+
+      // Right Column Body Stats
+      const bmi = +(m.w / Math.pow(m.h / 100, 2)).toFixed(1);
+      document.getElementById('bmiBadge').textContent = `BMI ${bmi}`;
+      document.getElementById('smiBadge').textContent = `肌脂比 ${m.muscleToFatRatio}`;
+      document.getElementById('statLbm').textContent = `${m.lbm.toFixed(1)} kg`;
+      document.getElementById('statSmm').textContent = `${m.smm.toFixed(1)} kg`;
+      document.getElementById('statMuscleRate').textContent = `占体重 ${((m.smm / m.w) * 100).toFixed(1)}%`;
+      document.getElementById('statFatMass').textContent = `${m.fatMass.toFixed(1)} kg`;
+      document.getElementById('statWaterTarget').textContent = `建议饮水 ${Math.round(m.w * 38)}ml`;
+
+      // Meal Split Table
+      const tbody = document.getElementById('mealSplitTableBody');
+      tbody.innerHTML = m.mealSplits.map(item => `
+        <tr class="hover:bg-slate-50/80 transition">
+          <td class="py-2.5 font-bold text-slate-800">${item.name}</td>
+          <td class="py-2.5 text-right font-black text-slate-900">${item.cal} kcal</td>
+          <td class="py-2.5 text-right font-black text-emerald-700">${item.c}g</td>
+          <td class="py-2.5 text-right font-black text-sky-700">${item.p}g</td>
+          <td class="py-2.5 text-right font-black text-amber-700">${item.f}g</td>
+        </tr>
+      `).join('');
+
+      const styleTips = {
+        hypertrophy: '肌肥大撸铁派：重点将今日 40% 以上碳水集中在【练前加餐】与【练后正餐】，最大化肌肉泵感与蛋白质合成。',
+        glute_shaping: '臀腿塑形派：下肢训练日切勿节食断碳！吃够米饭与红薯才能让臀部肌肉饱满挺翘，同时腰腹快速收紧。',
+        hiit_crossfit: 'HIIT/燃脂团课派：高心率糖酵解极度依赖快碳供能，练前补充香蕉或馒头可防低血糖头晕。',
+        endurance: '耐力运动派：提高正餐中糙米、荞麦面、燕麦等慢碳比例，持续平稳释放能量。',
+        home_novice: '居家自重/新手派：优先保证每餐优质瘦肉蛋白与绿叶蔬菜体积，稳步养成高代谢易瘦体质。'
+      };
+
+      const adviceBox = document.getElementById('personalizedAdviceBox');
+      adviceBox.innerHTML = `
+        <div class="font-black text-emerald-950 flex items-center gap-1.5">
+          <span>💡</span> <span>High Carb Project · by chris 专属诊断：</span>
+        </div>
+        <p>1. <strong>骨骼肌糖原容量核算：</strong> 您的骨骼肌为 <strong>${m.smm.toFixed(1)}kg</strong>（去脂体重 ${m.lbm.toFixed(1)}kg），全身肌糖原仓库可容纳约 <strong>${m.glycogenCapacity}g</strong> 碳水。今日摄入 <strong>${m.carbGrams}g</strong> 碳水能精准填满肌肉仓库而不会溢出转化为脂肪。</p>
+        <p>2. <strong>今日分化与睡眠协同：</strong> 当前设定为 <strong>${m.splitInfo.name}（${m.intensityInfo.name}）</strong>，每日睡眠 <strong>${m.sleepHours}小时</strong>。${styleTips[state.trainingStyle] || ''}</p>
+        <p>3. <strong>严控油脂底线：</strong> 今日全天脂肪上限为 <strong>${m.fatGrams}g</strong>，请认准【红黑榜】中的绿灯食材，炒菜用喷油壶或水油焖。</p>
+      `;
+
+      updateMacroChart(m);
+      renderAsianMeals(m);
+      renderFoodExchangeList();
+      renderFaqList();
+      renderGoalPlanner(m);
+      updateProjectionChart(m);
+    }
+
+    // ==========================================
+    // 5. RENDER ASIAN MEALS WITH EXACT GRAMS
+    // ==========================================
+    function getFilteredTemplates(mealKey) {
+      const list = MEAL_TEMPLATES[mealKey] || [];
+      if (state.cuisinePref === 'all') return list;
+      const filtered = list.filter(t => t.cuisine === state.cuisinePref);
+      return filtered.length > 0 ? filtered : list;
+    }
+
+    function renderAsianMeals(metrics) {
+      const container = document.getElementById('mealsContainer');
+      if (!container) return;
+
+      const cardsHtml = metrics.mealSplits.map(split => {
+        const candidates = getFilteredTemplates(split.key);
+        const idx = (state.selectedMealIndices[split.key] || 0) % candidates.length;
+        const tpl = candidates[idx];
+
+        const mainCarb = getFoodById(tpl.carbItem);
+        const secCarb = getFoodById(tpl.carbSecondary);
+        const mainPro = getFoodById(tpl.proteinItem);
+
+        const mainCarbGrams = Math.max(40, Math.round(((split.c * 0.68) / mainCarb.c) * 100));
+        const secCarbGrams = Math.max(30, Math.round(((split.c * 0.25) / secCarb.c) * 100));
+
+        const traceProFromCarbs = (mainCarbGrams / 100) * mainCarb.p + (secCarbGrams / 100) * secCarb.p + 3;
+        const neededPro = Math.max(10, split.p - traceProFromCarbs);
+        const mainProGrams = Math.max(50, Math.round((neededPro / mainPro.p) * 100));
+
+        const foodFat = (mainCarbGrams / 100) * mainCarb.f + (secCarbGrams / 100) * secCarb.f + (mainProGrams / 100) * mainPro.f + 0.8;
+        const addedOilGrams = Math.max(1, Math.min(8, Math.round(split.f - foodFat)));
+
+        return `
+          <div class="glass-card rounded-3xl p-4 sm:p-5 flex flex-col justify-between space-y-4 hover:border-emerald-300 transition hover:-translate-y-1">
+            <div class="space-y-3">
+              <div class="flex items-start justify-between gap-2">
+                <div>
+                  <span class="text-xs font-black text-emerald-700">${split.name}</span>
+                  <h4 class="text-base font-black text-slate-900 mt-0.5 tracking-tight">${tpl.title}</h4>
+                  <span class="inline-block mt-1 px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600 text-[11px] font-bold">${tpl.tag}</span>
+                </div>
+                <button type="button" data-swapmeal="${split.key}" class="swap-meal-btn tactile-btn shrink-0 px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-xs font-bold transition">
+                  🔄 换一换
+                </button>
+              </div>
+
+              <!-- Target Macro Pill for This Meal -->
+              <div class="grid grid-cols-4 gap-1.5 bg-slate-50/90 p-2.5 rounded-2xl border border-slate-100 text-center text-xs">
+                <div>
+                  <div class="text-[10px] text-slate-400 font-semibold">本餐热量</div>
+                  <div class="font-black text-slate-800">${split.cal} kcal</div>
+                </div>
+                <div>
+                  <div class="text-[10px] text-emerald-600 font-bold">碳水</div>
+                  <div class="font-black text-emerald-700">${split.c}g</div>
+                </div>
+                <div>
+                  <div class="text-[10px] text-sky-600 font-bold">蛋白质</div>
+                  <div class="font-black text-sky-700">${split.p}g</div>
+                </div>
+                <div>
+                  <div class="text-[10px] text-amber-600 font-bold">脂肪上限</div>
+                  <div class="font-black text-amber-700">${split.f}g</div>
+                </div>
+              </div>
+
+              <!-- Ingredient Portions List -->
+              <ul class="space-y-2 text-xs">
+                <li class="flex items-center justify-between py-1.5 border-b border-slate-100">
+                  <div class="flex items-center gap-2">
+                    <span class="px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800 font-bold text-[10px]">主力碳水</span>
+                    <span class="font-bold text-slate-800">${mainCarb.name}</span>
+                  </div>
+                  <span class="font-black text-emerald-700">${mainCarbGrams} ${mainCarb.unitLabel}</span>
+                </li>
+                <li class="flex items-center justify-between py-1.5 border-b border-slate-100">
+                  <div class="flex items-center gap-2">
+                    <span class="px-2 py-0.5 rounded-md bg-teal-100 text-teal-800 font-bold text-[10px]">复合碳水</span>
+                    <span class="font-bold text-slate-800">${secCarb.name}</span>
+                  </div>
+                  <span class="font-black text-teal-700">${secCarbGrams} ${secCarb.unitLabel}</span>
+                </li>
+                <li class="flex items-center justify-between py-1.5 border-b border-slate-100">
+                  <div class="flex items-center gap-2">
+                    <span class="px-2 py-0.5 rounded-md bg-sky-100 text-sky-800 font-bold text-[10px]">核心蛋白</span>
+                    <span class="font-bold text-slate-800">${mainPro.name}</span>
+                  </div>
+                  <span class="font-black text-sky-700">${mainProGrams} ${mainPro.unitLabel}</span>
+                </li>
+                <li class="flex items-center justify-between py-1.5 border-b border-slate-100">
+                  <div class="flex items-center gap-2">
+                    <span class="px-2 py-0.5 rounded-md bg-slate-200 text-slate-700 font-bold text-[10px]">膳食纤维</span>
+                    <span class="font-semibold text-slate-700">${tpl.veggieName}</span>
+                  </div>
+                  <span class="font-bold text-slate-600">足量搭配</span>
+                </li>
+                <li class="flex items-center justify-between py-1">
+                  <div class="flex items-center gap-2">
+                    <span class="px-2 py-0.5 rounded-md bg-amber-100 text-amber-800 font-bold text-[10px]">烹调控油</span>
+                    <span class="font-medium text-slate-700">烹调植物油/香油配额</span>
+                  </div>
+                  <span class="font-black text-amber-700">≤ ${addedOilGrams} 克</span>
+                </li>
+              </ul>
+            </div>
+
+            <div class="p-3.5 rounded-2xl bg-emerald-50/60 border border-emerald-100 text-[11px] text-slate-700 leading-relaxed shadow-sm">
+              <strong class="text-emerald-900">👨‍🍳 亚洲胃制作贴士：</strong>${tpl.prepNote}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      container.innerHTML = cardsHtml;
+    }
+
+    function renderFoodExchangeList() {
+      const grid = document.getElementById('foodDatabaseGrid');
+      const query = (document.getElementById('inputFoodSearch')?.value || '').trim().toLowerCase();
+      if (!grid) return;
+
+      const filtered = ASIAN_FOOD_ITEMS.filter(item =>
+        !query || item.name.toLowerCase().includes(query) || item.category.toLowerCase().includes(query) || item.tip.toLowerCase().includes(query)
+      );
+
+      grid.innerHTML = filtered.map(item => `
+        <div class="p-3 rounded-2xl bg-slate-50/90 border border-slate-200/80 flex flex-col justify-between space-y-2 hover:border-emerald-300 transition">
+          <div>
+            <div class="flex items-center justify-between gap-1">
+              <span class="text-xs font-bold text-slate-900">${item.name}</span>
+              <span class="text-[10px] px-1.5 py-0.5 rounded bg-white border border-slate-200 text-slate-600 shrink-0 font-bold">${item.category}</span>
+            </div>
+            <div class="mt-1 text-[11px] text-slate-500 font-medium">
+              每100${item.unitLabel}：<strong class="text-slate-800">${item.cal}kcal</strong> · 碳${item.c}g / 蛋${item.p}g / 脂${item.f}g
+            </div>
+          </div>
+          <div class="text-[11px] text-emerald-800 bg-emerald-50/80 px-2 py-1 rounded-lg font-medium">
+            💡 ${item.tip}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderFaqList() {
+      const container = document.getElementById('faqAccordionContainer');
+      if (!container) return;
+
+      container.innerHTML = HIGH_CARB_FAQS.map((item, idx) => {
+        const isOpen = (state.openFaqIndices || []).includes(idx);
+        return `
+          <div class="rounded-2xl border ${isOpen ? 'border-emerald-300 bg-emerald-50/30' : 'border-slate-200 bg-slate-50/60'} overflow-hidden transition duration-200">
+            <button type="button" data-faqidx="${idx}" class="faq-toggle-btn w-full px-4 py-3.5 text-left flex items-center justify-between gap-3 tactile-btn">
+              <span class="text-xs sm:text-sm font-bold text-slate-900">${item.q}</span>
+              <span class="text-emerald-600 font-black text-base shrink-0">${isOpen ? '−' : '+'}</span>
+            </button>
+            <div class="${isOpen ? 'block' : 'hidden'} px-4 pb-4 pt-1 text-xs text-slate-600 leading-relaxed border-t border-slate-100">
+              ${item.a}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // ==========================================
+    // 6. RENDER GOAL PLANNER (e.g., 3 MONTHS 10KG)
+    // ==========================================
+    function renderGoalPlanner(m) {
+      const g = m.goal;
+      const endWeight = Math.max(35, +(m.w - g.targetLoss).toFixed(1));
+      const months = +(g.targetWeeks / 4.33).toFixed(1);
+
+      document.getElementById('goalEndWeightText').textContent = `目标体重：${endWeight} kg (当前 ${m.w.toFixed(1)} kg)`;
+      document.getElementById('goalMonthsText').textContent = `约 ${months} 个月 (${g.totalDays} 天)`;
+      document.getElementById('splitRatioLabel').textContent = `饮食 ${state.dietSharePct}% / 运动 ${100 - state.dietSharePct}%`;
+
+      document.getElementById('planTotalDeficit').textContent = `${g.totalKcalDeficit.toLocaleString()} kcal`;
+      document.getElementById('planWeeklyLoss').textContent = `${g.weeklyLossRate} kg / 周 (占体重 ${g.weeklyLossPct}%)`;
+      document.getElementById('planDailyTotalDeficit').textContent = `${g.dailyTotalDeficitNeeded.toLocaleString()} kcal / 天`;
+      document.getElementById('planDietDeficit').textContent = `-${g.dailyDietDeficit} kcal (每日建议吃 ${g.plannedDietIntake.toLocaleString()} kcal)`;
+
+      const estSteps = Math.round((g.dailyCardioDeficit / 0.042));
+      const estCardioMin = Math.round(g.dailyCardioDeficit / 8.5);
+      document.getElementById('planCardioDeficit').textContent =
+        `+${g.dailyCardioDeficit} kcal (约快走 ${estSteps.toLocaleString()} 步 或 有氧 ${estCardioMin} 分钟)`;
+
+      const safetyBox = document.getElementById('planSafetyBox');
+      if (g.weeklyLossPct <= 1.25 && g.plannedDietIntake >= m.bmr - 50) {
+        safetyBox.className = 'p-3.5 rounded-2xl border border-emerald-200 bg-emerald-50 text-emerald-950 text-xs leading-relaxed shadow-sm';
+        safetyBox.innerHTML = `
+          <div class="font-black text-emerald-900">✅ 科学可执行评估：黄金高效减脂区间</div>
+          <p class="mt-1">在 <strong>${g.targetWeeks} 周内减重 ${g.targetLoss} kg</strong>（每周减 ${g.weeklyLossRate}kg），通过将每日 ${g.dailyTotalDeficitNeeded} kcal 缺口拆分为“<strong>饮食少吃 ${g.dailyDietDeficit} kcal + 运动多消耗 ${g.dailyCardioDeficit} kcal</strong>”，您的每日饮食摄入 (${g.plannedDietIntake} kcal) 依然高于或贴近基础代谢 (${m.bmr} kcal)，配合高碳低脂饮食可死守您 <strong>${m.smm.toFixed(1)}kg</strong> 的骨骼肌量！</p>
+        `;
+      } else if (g.weeklyLossPct <= 1.6) {
+        safetyBox.className = 'p-3.5 rounded-2xl border border-amber-200 bg-amber-50 text-amber-950 text-xs leading-relaxed shadow-sm';
+        safetyBox.innerHTML = `
+          <div class="font-black text-amber-900">⚡ 进阶冲刺评估：缺口较大，务必搭配每2周一次高碳 Refeed</div>
+          <p class="mt-1">每周减重 ${g.weeklyLossRate}kg 属于快速冲刺节奏。建议将滑块向左微调，增加每日步数或力量后有氧（每日多消耗 ${g.dailyCardioDeficit} kcal），保证每日至少摄入 <strong>${m.bmr} kcal</strong> 与 <strong>${m.proteinGrams}g 蛋白质</strong>，并严格执行下方三阶段计划中的“高碳回充日”。</p>
+        `;
+      } else {
+        safetyBox.className = 'p-3.5 rounded-2xl border border-rose-200 bg-rose-50 text-rose-950 text-xs leading-relaxed shadow-sm';
+        safetyBox.innerHTML = `
+          <div class="font-black text-rose-900">⚠️ 速率过快预警：建议延长周期以保护骨骼肌与代谢</div>
+          <p class="mt-1">当前设定的每周减重 (${g.weeklyLossRate}kg/周) 超过体重的 1.6%，过度节食极易导致肌肉流失与反弹。建议将周期调整至 <strong>${Math.ceil(g.targetLoss / (m.w * 0.011))} 周</strong> 左右，或提高运动分摊比例。</p>
+        `;
+      }
+
+      const p1Weeks = Math.max(1, Math.round(g.targetWeeks * 0.33));
+      const p2Weeks = Math.max(1, Math.round(g.targetWeeks * 0.34));
+      const p3Weeks = Math.max(1, g.targetWeeks - p1Weeks - p2Weeks);
+
+      const p1Loss = +(g.targetLoss * 0.38).toFixed(1);
+      const p2Loss = +(g.targetLoss * 0.35).toFixed(1);
+      const p3Loss = +(g.targetLoss - p1Loss - p2Loss).toFixed(1);
+
+      const roadmapContainer = document.getElementById('roadmapStagesContainer');
+      roadmapContainer.innerHTML = `
+        <div class="p-4 rounded-2xl bg-slate-50/90 border border-slate-200 space-y-2.5 shadow-sm hover:border-emerald-300 transition">
+          <div class="flex items-center justify-between">
+            <span class="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold">第一阶段 · 第 1~${p1Weeks} 周</span>
+            <span class="text-xs font-black text-emerald-700">目标 -${p1Loss} kg</span>
+          </div>
+          <h4 class="text-sm font-black text-slate-900">戒除隐形油脂 · 胰岛素敏感激活期</h4>
+          <ul class="text-xs text-slate-600 space-y-1.5 list-disc pl-4 font-medium">
+            <li><strong>怎么吃：</strong>每日摄入约 <strong>${g.plannedDietIntake + 50} kcal</strong>，碳水占比 55%（白米饭+杂粮饭+红薯），戒除红灯区糖油混合物，全天脂肪严控在 <strong>${m.fatGrams}g</strong> 内。</li>
+            <li><strong>怎么练：</strong>每周 ${state.trainingFreq || 4} 次推/拉/腿抗阻训练 + 充足睡眠 (${m.sleepHours}h)。</li>
+            <li><strong>身体反馈：</strong>前2周排钠排水明显，维度迅速收紧，精神饱满不暴食。</li>
+          </ul>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-slate-50/90 border border-slate-200 space-y-2.5 shadow-sm hover:border-sky-300 transition">
+          <div class="flex items-center justify-between">
+            <span class="px-2.5 py-0.5 rounded-full bg-sky-100 text-sky-800 text-xs font-bold">第二阶段 · 第 ${p1Weeks + 1}~${p1Weeks + p2Weeks} 周</span>
+            <span class="text-xs font-black text-sky-700">目标 -${p2Loss} kg</span>
+          </div>
+          <h4 class="text-sm font-black text-slate-900">腿日/推拉日碳水高低错峰攻坚期</h4>
+          <ul class="text-xs text-slate-600 space-y-1.5 list-disc pl-4 font-medium">
+            <li><strong>怎么吃：</strong>每日平均 <strong>${g.plannedDietIntake} kcal</strong>。腿日/拉日高碳低脂（碳水 <strong>${m.carbGrams}g</strong> 集中在练前练后）；休息日减少约 35g 碳水。</li>
+            <li><strong>防平台期大招：</strong>每满 12~14 天安排 1 天“<strong>代谢回充日 (Refeed)</strong>”，吃够 TDEE (${m.tdee} kcal) 的高碳米饭面食，拉高瘦素。</li>
+            <li><strong>身体反馈：</strong>突破中期平台，腹部与顽固脂肪加速分解。</li>
+          </ul>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-slate-50/90 border border-slate-200 space-y-2.5 shadow-sm hover:border-amber-300 transition">
+          <div class="flex items-center justify-between">
+            <span class="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 text-xs font-bold">第三阶段 · 第 ${p1Weeks + p2Weeks + 1}~${g.targetWeeks} 周</span>
+            <span class="text-xs font-black text-amber-700">目标 -${p3Loss} kg</span>
+          </div>
+          <h4 class="text-sm font-black text-slate-900">精准收尾雕刻 · 逆向饮食防反弹定型</h4>
+          <ul class="text-xs text-slate-600 space-y-1.5 list-disc pl-4 font-medium">
+            <li><strong>怎么吃：</strong>体重降至 ${endWeight}kg 附近时，代谢自然微降，每日控制在 <strong>${Math.max(m.bmr, g.plannedDietIntake - 60)} kcal</strong>，蛋白质拉高至 <strong>${Math.round(m.lbm * 2.3)}g</strong> 死守骨骼肌线条。</li>
+            <li><strong>巩固不反弹：</strong>达标后最后 2 周每周逐步增加 30g 碳水回归日常维持热量，让易瘦高代谢体质彻底稳固。</li>
+          </ul>
+        </div>
+      `;
+    }
+
+    // ==========================================
+    // 7. EVENT LISTENERS & INTERACTION WIRING
+    // ==========================================
+    function switchTab(tabName) {
+      document.querySelectorAll('.tab-panel').forEach(panel => {
+        panel.classList.toggle('hidden', panel.id !== `tab-${tabName}`);
+      });
+      document.querySelectorAll('.main-tab-btn').forEach(btn => {
+        const isActive = btn.dataset.tab === tabName;
+        const isMobileNav = btn.parentElement.classList.contains('sm:hidden');
+        if (isMobileNav) {
+          btn.className = isActive
+            ? 'main-tab-btn flex flex-col items-center justify-center gap-0.5 text-[11px] font-bold text-emerald-600'
+            : 'main-tab-btn flex flex-col items-center justify-center gap-0.5 text-[11px] font-medium text-slate-500';
+        } else {
+          btn.className = isActive
+            ? 'main-tab-btn flex-1 min-w-[140px] py-2.5 px-3 rounded-xl text-xs md:text-sm font-bold transition theme-btn-primary flex items-center justify-center gap-1.5'
+            : 'main-tab-btn flex-1 min-w-[140px] py-2.5 px-3 rounded-xl text-xs md:text-sm font-semibold transition text-slate-600 hover:bg-slate-100/80 flex items-center justify-center gap-1.5';
+        }
+      });
+      if (tabName === 'profile' && macroChartInstance) macroChartInstance.resize();
+      if (tabName === 'planner' && projectionChartInstance) projectionChartInstance.resize();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function openIntroModal() {
+      const modal = document.getElementById('projectIntroModal');
+      modal.classList.remove('hidden');
+    }
+
+    function closeIntroModal() {
+      const modal = document.getElementById('projectIntroModal');
+      modal.classList.add('hidden');
+      state.introModalDismissed = true;
+      saveState();
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      // Intro Modal Controls
+      document.getElementById('btnCloseIntroModalX').addEventListener('click', closeIntroModal);
+      document.getElementById('btnEnterProjectCTA').addEventListener('click', () => {
+        closeIntroModal();
+        showToast('欢迎进入 High Carb Project！已为您就绪', '🚀');
+      });
+      document.getElementById('btnOpenIntroModal').addEventListener('click', openIntroModal);
+      document.getElementById('brandLogoBox').addEventListener('click', openIntroModal);
+
+      // Auto dismiss modal if previously dismissed
+      if (state.introModalDismissed) {
+        document.getElementById('projectIntroModal').classList.add('hidden');
+      }
+
+      // Tab switching
+      document.querySelectorAll('.main-tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+      });
+
+      document.getElementById('btnGoToMeals').addEventListener('click', () => switchTab('meals'));
+
+      // Aesthetic Theme Toggle Button
+      document.getElementById('btnToggleAesthetic').addEventListener('click', () => {
+        state.aestheticTheme = state.aestheticTheme === 'aurora_female' ? 'cyber_male' : 'aurora_female';
+        saveState();
+        renderAll();
+        showToast(
+          state.aestheticTheme === 'aurora_female'
+            ? '已切换为：🌸 极光柔粉风（女生高定审美主题）'
+            : '已切换为：⚡ 赛博机能风（男生硬核审美主题）',
+          '🎨'
+        );
+      });
+
+      // Day Mode buttons
+      document.querySelectorAll('.day-mode-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          state.dayMode = btn.dataset.daymode;
+          if (state.dayMode === 'rest') {
+            state.workoutSplit = 'rest_cardio';
+          } else if (state.workoutSplit === 'rest_cardio') {
+            state.workoutSplit = 'leg';
+          }
+          saveState();
+          renderAll();
+          showToast(`已切换为：${btn.textContent.trim()}`);
+        });
+      });
+
+      // Gender buttons (Also auto-switches aesthetic theme to match gender!)
+      document.getElementById('btnGenderMale').addEventListener('click', () => {
+        state.gender = 'male';
+        state.aestheticTheme = 'cyber_male';
+        saveState();
+        renderAll();
+        showToast('已切换为男性代谢模型 & ⚡ 赛博机能风主题');
+      });
+      document.getElementById('btnGenderFemale').addEventListener('click', () => {
+        state.gender = 'female';
+        state.aestheticTheme = 'aurora_female';
+        saveState();
+        renderAll();
+        showToast('已切换为女性代谢模型 & 🌸 极光柔粉风主题');
+      });
+
+      // Numeric Inputs (Age, Height, Weight)
+      ['inputAge', 'inputHeight', 'inputWeight'].forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.addEventListener('input', () => {
+          if (id === 'inputAge') state.age = Number(el.value);
+          if (id === 'inputHeight') state.height = Number(el.value);
+          if (id === 'inputWeight') state.weight = Number(el.value);
+          saveState();
+          renderAll();
+        });
+      });
+
+      // Body Fat Input & Slider Sync
+      const inputBf = document.getElementById('inputBodyFat');
+      const sliderBf = document.getElementById('sliderBodyFat');
+      inputBf.addEventListener('input', () => {
+        state.bodyFat = Number(inputBf.value);
+        sliderBf.value = state.bodyFat;
+        saveState();
+        renderAll();
+      });
+      sliderBf.addEventListener('input', () => {
+        state.bodyFat = Number(sliderBf.value);
+        inputBf.value = state.bodyFat;
+        saveState();
+        renderAll();
+      });
+
+      // Muscle Mass Checkbox, Slider & Input Sync
+      const chkMuscle = document.getElementById('chkManualMuscle');
+      const inputMuscle = document.getElementById('inputMuscleMass');
+      const sliderMuscle = document.getElementById('sliderMuscleMass');
+
+      chkMuscle.addEventListener('change', () => {
+        state.manualMuscle = chkMuscle.checked;
+        saveState();
+        renderAll();
+        showToast(state.manualMuscle ? '已开启自定义骨骼肌量校准' : '已恢复根据去脂体重自动推算骨骼肌');
+      });
+
+      inputMuscle.addEventListener('input', () => {
+        state.manualMuscle = true;
+        chkMuscle.checked = true;
+        state.muscleMass = Number(inputMuscle.value);
+        sliderMuscle.value = state.muscleMass;
+        saveState();
+        renderAll();
+      });
+
+      sliderMuscle.addEventListener('input', () => {
+        state.manualMuscle = true;
+        chkMuscle.checked = true;
+        state.muscleMass = Number(sliderMuscle.value);
+        inputMuscle.value = state.muscleMass;
+        saveState();
+        renderAll();
+      });
+
+      // Manual BMR Override
+      const chkBmr = document.getElementById('chkManualBmr');
+      const inputBmr = document.getElementById('inputCustomBmr');
+      chkBmr.addEventListener('change', () => {
+        state.manualBmr = chkBmr.checked;
+        inputBmr.disabled = !state.manualBmr;
+        inputBmr.classList.toggle('bg-slate-100', !state.manualBmr);
+        inputBmr.classList.toggle('bg-white', state.manualBmr);
+        saveState();
+        renderAll();
+      });
+      inputBmr.addEventListener('input', () => {
+        state.customBmr = Number(inputBmr.value);
+        saveState();
+        renderAll();
+      });
+
+      // Sleep Hours & Quality Sync
+      const inputSleep = document.getElementById('inputSleepHours');
+      const sliderSleep = document.getElementById('sliderSleepHours');
+      const selectSleepQ = document.getElementById('selectSleepQuality');
+
+      inputSleep.addEventListener('input', () => {
+        state.sleepHours = Number(inputSleep.value);
+        sliderSleep.value = state.sleepHours;
+        saveState();
+        renderAll();
+      });
+      sliderSleep.addEventListener('input', () => {
+        state.sleepHours = Number(sliderSleep.value);
+        inputSleep.value = state.sleepHours;
+        saveState();
+        renderAll();
+      });
+      selectSleepQ.addEventListener('change', (e) => {
+        state.sleepQuality = e.target.value;
+        saveState();
+        renderAll();
+      });
+
+      // Training Style & Dietary Checkboxes
+      document.getElementById('selectTrainingStyle').addEventListener('change', (e) => {
+        state.trainingStyle = e.target.value;
+        saveState();
+        renderAll();
+      });
+
+      ['chkNoLactose', 'chkNoSeafood', 'chkNoPork'].forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.addEventListener('change', () => {
+          if (id === 'chkNoLactose') state.noLactose = el.checked;
+          if (id === 'chkNoSeafood') state.noSeafood = el.checked;
+          if (id === 'chkNoPork') state.noPork = el.checked;
+          saveState();
+          renderAll();
+          showToast('已根据您的忌口偏好自动替换三餐食材！');
+        });
+      });
+
+      // Workout Split buttons (Leg / Pull / Push / Full HIIT / Rest Cardio)
+      document.querySelectorAll('.split-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          state.workoutSplit = btn.dataset.split;
+          if (state.workoutSplit === 'rest_cardio') {
+            state.dayMode = 'rest';
+          } else if (state.dayMode === 'rest') {
+            state.dayMode = 'training';
+          }
+          saveState();
+          renderAll();
+          showToast(`今日训练部位已切换为：${SPLIT_CONFIG[state.workoutSplit].name}`);
+        });
+      });
+
+      // Workout Intensity buttons
+      document.querySelectorAll('.intensity-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          state.workoutIntensity = btn.dataset.intensity;
+          saveState();
+          renderAll();
+        });
+      });
+
+      // Training Frequency buttons
+      document.querySelectorAll('.freq-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          state.trainingFreq = Number(btn.dataset.freq);
+          saveState();
+          renderAll();
+        });
+      });
+
+      // Carb Strategy buttons
+      document.querySelectorAll('.strategy-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          state.carbStrategy = btn.dataset.strategy;
+          saveState();
+          renderAll();
+        });
+      });
+
+      // Meal Planner Controls
+      document.getElementById('selectCuisinePref').addEventListener('change', (e) => {
+        state.cuisinePref = e.target.value;
+        state.selectedMealIndices = { breakfast: 0, lunch: 0, snack: 0, dinner: 0 };
+        saveState();
+        renderAll();
+        showToast('已切换亚洲风味偏好并重算克数');
+      });
+
+      document.getElementById('btnShuffleAllMeals').addEventListener('click', () => {
+        ['breakfast', 'lunch', 'snack', 'dinner'].forEach(k => {
+          state.selectedMealIndices[k] = (state.selectedMealIndices[k] || 0) + 1;
+        });
+        saveState();
+        renderAll();
+        showToast('已为您智能更换全天亚洲高碳食谱！', '🍱');
+      });
+
+      document.getElementById('mealsContainer').addEventListener('click', (e) => {
+        const swapBtn = e.target.closest('.swap-meal-btn');
+        if (!swapBtn) return;
+        const key = swapBtn.dataset.swapmeal;
+        state.selectedMealIndices[key] = (state.selectedMealIndices[key] || 0) + 1;
+        saveState();
+        renderAll();
+        showToast('已更换该餐食谱并重新精准配平克数');
+      });
+
+      document.getElementById('inputFoodSearch').addEventListener('input', () => {
+        renderFoodExchangeList();
+      });
+
+      // FAQ Accordion Interactions
+      document.getElementById('faqAccordionContainer').addEventListener('click', (e) => {
+        const btn = e.target.closest('.faq-toggle-btn');
+        if (!btn) return;
+        const idx = Number(btn.dataset.faqidx);
+        const list = state.openFaqIndices || [];
+        if (list.includes(idx)) {
+          state.openFaqIndices = list.filter(i => i !== idx);
+        } else {
+          state.openFaqIndices = [...list, idx];
+        }
+        saveState();
+        renderFaqList();
+      });
+
+      document.getElementById('btnExpandAllFaq').addEventListener('click', () => {
+        if ((state.openFaqIndices || []).length === HIGH_CARB_FAQS.length) {
+          state.openFaqIndices = [];
+        } else {
+          state.openFaqIndices = HIGH_CARB_FAQS.map((_, i) => i);
+        }
+        saveState();
+        renderFaqList();
+      });
+
+      // Copy Meal Plan to Clipboard (with High Carb Project · by chris watermark)
+      document.getElementById('btnCopyMealPlan').addEventListener('click', () => {
+        const m = computeMetrics();
+        const textLines = [
+          `【High Carb Project · by chris | 今日亚洲高碳减脂配餐单】`,
+          `身体指标：体重 ${m.w}kg | 体脂率 ${m.bf}% | 去脂体重 ${m.lbm.toFixed(1)}kg | 骨骼肌 ${m.smm.toFixed(1)}kg (肌脂比 ${m.muscleToFatRatio})`,
+          `睡眠与分化：每日睡眠 ${m.sleepHours}h | ${m.splitInfo.name} (${m.intensityInfo.name})`,
+          `今日目标：${m.finalCalories} kcal | 碳水 ${m.carbGrams}g (${m.finalCarbPct}%) | 蛋白质 ${m.proteinGrams}g (${m.finalProPct}%) | 脂肪 ${m.fatGrams}g (${m.finalFatPct}%)`,
+          `----------------------------------------`
+        ];
+        m.mealSplits.forEach(s => {
+          const candidates = getFilteredTemplates(s.key);
+          const tpl = candidates[(state.selectedMealIndices[s.key] || 0) % candidates.length];
+          textLines.push(`${s.name}：${tpl.title} (${s.cal}kcal | 碳${s.c}g 蛋${s.p}g 脂${s.f}g)`);
+        });
+        textLines.push(`----------------------------------------`);
+        textLines.push(`系统出品：High Carb Project · by chris`);
+
+        const fullText = textLines.join('\n');
+        const tempArea = document.createElement('textarea');
+        tempArea.value = fullText;
+        document.body.appendChild(tempArea);
+        tempArea.select();
+        try {
+          document.execCommand('copy');
+          showToast('今日配餐单已复制（含 High Carb Project · by chris 水印）！', '📋');
+        } catch (err) {
+          showToast('复制完成');
+        }
+        document.body.removeChild(tempArea);
+      });
+
+      // Goal Planner Controls
+      const inputLoss = document.getElementById('inputTargetWeightLoss');
+      const inputWeeks = document.getElementById('inputTargetWeeks');
+      const sliderShare = document.getElementById('sliderDietShare');
+
+      inputLoss.addEventListener('input', () => {
+        state.targetWeightLoss = Number(inputLoss.value);
+        saveState();
+        renderAll();
+      });
+      inputWeeks.addEventListener('input', () => {
+        state.targetWeeks = Number(inputWeeks.value);
+        saveState();
+        renderAll();
+      });
+      sliderShare.addEventListener('input', () => {
+        state.dietSharePct = Number(sliderShare.value);
+        saveState();
+        renderAll();
+      });
+
+      function apply3Months10KgPreset() {
+        state.targetWeightLoss = 10.0;
+        state.targetWeeks = 12;
+        state.dietSharePct = 65;
+        inputLoss.value = 10.0;
+        inputWeeks.value = 12;
+        sliderShare.value = 65;
+        const m = computeMetrics();
+        state.syncedGoalDeficit = m.goal.dailyDietDeficit;
+        saveState();
+        renderAll();
+        switchTab('planner');
+        showToast('已载入“3个月(12周)减10公斤”专属高碳方案并同步今日热量！', '🔥');
+      }
+
+      document.getElementById('btnPreset3M10Kg').addEventListener('click', apply3Months10KgPreset);
+      document.getElementById('btnApply3M10KInline').addEventListener('click', apply3Months10KgPreset);
+
+      document.getElementById('btnSyncGoalToDaily').addEventListener('click', () => {
+        const m = computeMetrics();
+        state.syncedGoalDeficit = m.goal.dailyDietDeficit;
+        saveState();
+        renderAll();
+        switchTab('meals');
+        showToast(`已将目标饮食热量 (${m.goal.plannedDietIntake} kcal) 同步至今日三餐配餐！`, '✨');
+      });
+
+      document.getElementById('btnResetDefault').addEventListener('click', () => {
+        state = { ...defaultState };
+        document.getElementById('inputAge').value = state.age;
+        document.getElementById('inputHeight').value = state.height;
+        document.getElementById('inputWeight').value = state.weight;
+        document.getElementById('inputBodyFat').value = state.bodyFat;
+        document.getElementById('sliderBodyFat').value = state.bodyFat;
+        document.getElementById('chkManualMuscle').checked = false;
+        document.getElementById('inputMuscleMass').value = state.muscleMass;
+        document.getElementById('sliderMuscleMass').value = state.muscleMass;
+        document.getElementById('chkManualBmr').checked = false;
+        document.getElementById('inputCustomBmr').disabled = true;
+        document.getElementById('inputSleepHours').value = state.sleepHours;
+        document.getElementById('sliderSleepHours').value = state.sleepHours;
+        document.getElementById('selectSleepQuality').value = state.sleepQuality;
+        document.getElementById('selectTrainingStyle').value = state.trainingStyle;
+        document.getElementById('chkNoLactose').checked = false;
+        document.getElementById('chkNoSeafood').checked = false;
+        document.getElementById('chkNoPork').checked = false;
+        document.getElementById('inputTargetWeightLoss').value = state.targetWeightLoss;
+        document.getElementById('inputTargetWeeks').value = state.targetWeeks;
+        document.getElementById('sliderDietShare').value = state.dietSharePct;
+        saveState();
+        renderAll();
+        showToast('已恢复默认身体与目标参数', '🔄');
+      });
+
+      // Initial render
+      renderAll();
+    });
+  </script>
+</body>
+</html>
